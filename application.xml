@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="my_application">
+  <jobTemplates>
+  	 <jobTemplate id="masterfolder_prep">
+      <streamingExecutable>/application/masterfolder_prep/run</streamingExecutable>
+    </jobTemplate>
+    <jobTemplate id="stamps_v4_parallel">
+      <streamingExecutable>/application/stamps_v4_parallel/run</streamingExecutable>
+    </jobTemplate>
+    <jobTemplate id="appcleanup">
+      <streamingExecutable>/application/appcleanup/run</streamingExecutable>
+    </jobTemplate>
+  </jobTemplates>
+  <workflow id="dcs-stamps4-aa" title="Run Stamps v4.1b" abstract="Run Stamps v4.1b persistent scatterer with Terradue Hadoop ">
+    <workflowVersion>1.0</workflowVersion>
+    <node id="node_masterfolder_prep">
+      <job id="masterfolder_prep"/>
+      <sources>
+        <source refid="file:urls">/application/inputs/master</source>
+      </sources>
+    </node>
+    <node id="node_stamps_v4_parallel">
+      <job id="stamps_v4_parallel"/>
+      <sources>
+        <!-- <source refid="wf:node">node_masterfolder_prep</source> -->
+        <source refid="file:urls">/application/inputs/list</source>
+      </sources>
+    </node>
+    <node id="node_appcleanup">
+      <job id="appcleanup"/>
+      <sources>
+        <source refid="wf:node">node_stamps_v4_parallel</source>        
+      </sources>
+    </node>
+  </workflow>
+</application>
+

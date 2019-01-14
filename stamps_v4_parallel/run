@@ -1,0 +1,111 @@
+#!/opt/anaconda/bin/python
+
+import sys
+import atexit
+import os
+import shutil
+import subprocess
+import re
+
+# import the ciop functions (e.g. copy, log)
+
+import cioppy
+ciop = cioppy.Cioppy()
+
+# define the exit codes
+SUCCESS = 0
+ERR_STEP_1 = 2
+ERR_STEP_2 = 3
+ERR_STEP_3 = 4
+ERR_STEP_4 = 5
+ERR_STEP_5 = 6
+
+# add a trap to exit gracefully
+def clean_exit(exit_code):
+    log_level = 'INFO'
+    if exit_code != SUCCESS:
+        log_level = 'ERROR'  
+   
+    msg = { SUCCESS: 'Processing successfully concluded',
+           ERR_STEP_1: 'Error in STAMPS step 1',
+           ERR_STEP_2: 'Error in STAMPS step 2',
+           ERR_STEP_3: 'Error in STAMPS step 3',
+           ERR_STEP_4: 'Error in STAMPS step 4',
+           ERR_STEP_5: 'Error in STAMPS step 5'
+           }
+ 
+    ciop.log(log_level, msg[exit_code])  
+    
+def main():
+    # Loops over all the inputs
+
+    PROCESSDIR="/tmp"
+    home='/home/aapostolakis'
+    runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps/run_stamps_env.sh')
+
+
+    for inputfile in sys.stdin:
+        # report activity in log
+        ciop.log('INFO', 'The input file is: ' + inputfile)
+
+        #patch_no = inputfile[-1:]
+        match=re.search(r"PATCH_.*",inputfile)
+        patch_no = match.group(0)[6]
+        
+        masterfolder=os.path.dirname(inputfile)
+        ciop.log('INFO', 'Master folder is: ' + masterfolder)
+        
+        processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
+        ciop.log('INFO', 'Master temp folder: ' + processfolder)
+
+        # retrieve the MER_RR__1P product to the local temporary folder TMPDIR provided by the framework (this folder is only used by this process)
+        # the ciop.copy function will use one of online resource available in the metadata to copy it to the TMPDIR folder
+        # the funtion returns the local path so the variable retrieved contains the local path to the MERIS product
+        
+        #retrieved = ciop.copy(inputfile, ciop.tmp_dir)
+        '''
+        if not os.path.exists(processfolder):
+            #retrieved = ciop.copy(masterfolder, ciop.tmp_dir)
+            retrieved = ciop.copy(masterfolder, PROCESSDIR)
+            assert(retrieved)
+            ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
+        '''
+            
+        os.chdir(processfolder)
+        
+        for i in range(1,6):
+            ciop.log('INFO', 'Processing PATCH ' + patch_no)
+            ciop.log('INFO', 'Running Step %d for PATCH %s'%(i,patch_no))
+        
+            cmdlist = [ runstamps, '%d'%i, '%d'%i, 'y', '0', 'patch_list_split_'+patch_no, '1']
+            ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
+            res=subprocess.call(cmdlist)
+            res=0
+            if res!=0:
+                clean_exit(2+i)
+            assert(res == 0)
+
+        '''
+        with open('masterfolder', "w") as f:
+            f.write(processfolder)
+            f.close()
+        '''
+        # publish the result 
+        # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
+        ciop.log('INFO', 'Publishing result '+ processfolder)
+        #published = ciop.publish(retrieved)
+        #published = ciop.publish(os.path.join(processfolder,'patch.list'))
+        published = ciop.publish(processfolder, mode='silent')
+        ciop.log('INFO', 'Published ' + published)
+        
+    #ciop.log('INFO', 'Removing temp folder ' + processfolder)    
+    #shutil.rmtree(processfolder)
+    
+try:
+    main()
+except SystemExit as e:
+    if e.args[0]:
+         clean_exit(e.args[0])
+    raise
+else:
+    atexit.register(clean_exit, 0)

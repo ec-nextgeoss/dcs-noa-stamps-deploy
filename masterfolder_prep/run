@@ -1,0 +1,92 @@
+#!/opt/anaconda/bin/python
+
+import sys
+import atexit
+import os
+import shutil
+import subprocess
+import re
+
+# import the ciop functions (e.g. copy, log)
+
+import cioppy
+ciop = cioppy.Cioppy()
+
+# define the exit codes
+SUCCESS = 0
+ERR_STEP_1 = 2
+
+# add a trap to exit gracefully
+def clean_exit(exit_code):
+    log_level = 'INFO'
+    if exit_code != SUCCESS:
+        log_level = 'ERROR'  
+   
+    msg = { SUCCESS: 'Processing successfully concluded',
+           ERR_STEP_1: 'Error in STAMPS step 1'
+           }
+ 
+    ciop.log(log_level, msg[exit_code])  
+    
+def main():
+    # Loops over all the inputs
+
+    PROCESSDIR="/tmp"
+    home='/home/aapostolakis'
+    runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps/run_stamps_env.sh')
+
+
+    for inputfile in sys.stdin:
+        # report activity in log
+        ciop.log('INFO', 'The input file is: ' + inputfile)
+     
+        masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
+
+        ciop.log('INFO', 'Master folder is: ' + masterfolder)
+        
+        processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
+        ciop.log('INFO', 'Master temp folder: ' + processfolder)
+
+        # retrieve the MER_RR__1P product to the local temporary folder TMPDIR provided by the framework (this folder is only used by this process)
+        # the ciop.copy function will use one of online resource available in the metadata to copy it to the TMPDIR folder
+        # the funtion returns the local path so the variable retrieved contains the local path to the MERIS product
+        
+        #retrieved = ciop.copy(inputfile, ciop.tmp_dir)
+
+        ciop.log('INFO', 'path exists  ' + processfolder + ' : ' + '%s'%os.path.exists(processfolder))
+        ciop.log('INFO', 'path exists  ' + PROCESSDIR + ' : ' + '%s'%os.path.exists(PROCESSDIR))
+
+        
+        if not os.path.exists(processfolder):
+            #retrieved = ciop.copy(masterfolder, ciop.tmp_dir)
+            ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
+            retrieved = ciop.copy(masterfolder, PROCESSDIR)
+            assert(retrieved)
+            ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
+            
+        # publish the result 
+        # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
+        ciop.log('INFO', 'Publishing patches')
+        #published = ciop.publish(retrieved)
+        #published = ciop.publish(os.path.join(processfolder,'patch.list'))
+        
+        '''
+        with open("/application/inputs/list", "r") as f:
+            lines = f.readlines()
+            f.close()
+
+        for line in lines:
+            line=line.rstrip('\n').rstrip('\r')
+            published = ciop.publish(line, mode = "silent")
+            ciop.log('INFO', 'Published ' + published)
+        '''
+        
+    
+try:
+    main()
+except SystemExit as e:
+    if e.args[0]:
+         clean_exit(e.args[0])
+    raise
+else:
+    atexit.register(clean_exit, 0)
