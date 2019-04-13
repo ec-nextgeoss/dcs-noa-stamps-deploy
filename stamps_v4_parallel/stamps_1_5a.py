@@ -39,9 +39,9 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    PROCESSDIR="/tmp"
+    PROCESSDIR="/shared/ath_sent1_test2/stamps_steps"
     home='/home/aapostolakis'
-    runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps/run_stamps_env.sh')
+    runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps_2/run_stamps_env.sh')
 
 
     for inputfile in sys.stdin:
