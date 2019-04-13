@@ -5,7 +5,7 @@
       <streamingExecutable>/application/masterfolder_prep/run</streamingExecutable>
     </jobTemplate>
     <jobTemplate id="stamps_v4_parallel">
-      <streamingExecutable>/application/stamps_v4_parallel/run</streamingExecutable>
+      <streamingExecutable>/application/stamps_v4_parallel/stamps_1_5a.py</streamingExecutable>
     </jobTemplate>
     <jobTemplate id="appcleanup">
       <streamingExecutable>/application/appcleanup/run</streamingExecutable>
