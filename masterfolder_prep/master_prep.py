@@ -35,49 +35,47 @@ def main():
     home='/home/aapostolakis'
 
 
-    # report activity in log
-   
-    #masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
-    masterfolder=ciop.getparam('masterfolder')
-
-    ciop.log('INFO', 'Master folder is: ' + masterfolder)
-       
-    processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
-    ciop.log('INFO', 'Master temp folder: ' + processfolder)
-
-    # retrieve the MER_RR__1P product to the local temporary folder TMPDIR provided by the framework (this folder is only used by this process)
-    # the ciop.copy function will use one of online resource available in the metadata to copy it to the TMPDIR folder
-    # the funtion returns the local path so the variable retrieved contains the local path to the MERIS product
+    for inputfile in sys.stdin:
+        #masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
+        masterfolder=ciop.getparam('masterfolder')
     
-    #retrieved = ciop.copy(inputfile, ciop.tmp_dir)
-
-    ciop.log('INFO', 'path exists  ' + processfolder + ' : ' + '%s'%os.path.exists(processfolder))
-    ciop.log('INFO', 'path exists  ' + PROCESSDIR + ' : ' + '%s'%os.path.exists(PROCESSDIR))
-        
-    if not os.path.exists(processfolder):
-        #retrieved = ciop.copy(masterfolder, ciop.tmp_dir)
-        ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
-        #retrieved = ciop.copy(masterfolder, PROCESSDIR)
-        #assert(retrieved)
-        #ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
-        
-    # publish the result 
-    # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
-    ciop.log('INFO', 'Publishing patches')
-    #published = ciop.publish(retrieved)
-    #published = ciop.publish(os.path.join(processfolder,'patch.list'))
+        ciop.log('INFO', 'Master folder is: ' + masterfolder)
+           
+        processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
+        ciop.log('INFO', 'Master temp folder: ' + processfolder)
     
-    '''
-    with open("/application/inputs/list", "r") as f:
-        lines = f.readlines()
-        f.close()
-
-    for line in lines:
-        line=line.rstrip('\n').rstrip('\r')
-        published = ciop.publish(line, mode = "silent")
-        ciop.log('INFO', 'Published ' + published)
-    '''
+        # retrieve the MER_RR__1P product to the local temporary folder TMPDIR provided by the framework (this folder is only used by this process)
+        # the ciop.copy function will use one of online resource available in the metadata to copy it to the TMPDIR folder
+        # the funtion returns the local path so the variable retrieved contains the local path to the MERIS product
         
+        #retrieved = ciop.copy(inputfile, ciop.tmp_dir)
+    
+        ciop.log('INFO', 'path exists  ' + processfolder + ' : ' + '%s'%os.path.exists(processfolder))
+        ciop.log('INFO', 'path exists  ' + PROCESSDIR + ' : ' + '%s'%os.path.exists(PROCESSDIR))
+            
+        if not os.path.exists(processfolder):
+            #retrieved = ciop.copy(masterfolder, ciop.tmp_dir)
+            ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
+            #retrieved = ciop.copy(masterfolder, PROCESSDIR)
+            #assert(retrieved)
+            #ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
+            
+        # publish the result 
+        # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
+        ciop.log('INFO', 'Publishing patches')
+        #published = ciop.publish(retrieved)
+        #published = ciop.publish(os.path.join(processfolder,'patch.list'))
+        
+        '''
+        with open("/application/inputs/list", "r") as f:
+            lines = f.readlines()
+            f.close()
+    
+        for line in lines:
+            line=line.rstrip('\n').rstrip('\r')
+            published = ciop.publish(line, mode = "silent")
+            ciop.log('INFO', 'Published ' + published)
+        '''
     
 try:
     main()

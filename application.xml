@@ -21,6 +21,10 @@
     <workflowVersion>1.0</workflowVersion>
     <node id="node_masterfolder_prep">
       <job id="masterfolder_prep"/>
+       <sources>
+        <!-- <source refid="wf:node">node_masterfolder_prep</source> -->
+        <source refid="file:urls">/application/inputs/master</source>
+      </sources>
     </node>
     <node id="node_stamps_v4_parallel">
       <job id="stamps_v4_parallel"/>
