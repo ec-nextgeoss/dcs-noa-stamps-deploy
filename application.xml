@@ -2,19 +2,19 @@
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="my_application">
   <jobTemplates>
   	 <jobTemplate id="masterfolder_prep">
-      <streamingExecutable>/application/masterfolder_prep/run</streamingExecutable>
+      <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
 	  <defaultParameters>
 	    <parameter id="masterfolder">/shared/ath_sent1_test2/mtprep/INSAR_20180717</parameter>
 	  </defaultParameters>
-	  <defaultJobconf>
-        <property id="ciop.job.max.tasks">1</property>
-      </defaultJobconf>
     </jobTemplate>
     <jobTemplate id="stamps_v4_parallel">
       <streamingExecutable>/application/stamps_v4_parallel/stamps_1_5a.py</streamingExecutable>
     </jobTemplate>
     <jobTemplate id="appcleanup">
       <streamingExecutable>/application/appcleanup/run</streamingExecutable>
+      <defaultJobconf>
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
     </jobTemplate>
   </jobTemplates>
   <workflow id="dcs-stamps4-aa" title="Run Stamps v4.1b" abstract="Run Stamps v4.1b persistent scatterer with Terradue Hadoop ">
@@ -29,8 +29,8 @@
     <node id="node_stamps_v4_parallel">
       <job id="stamps_v4_parallel"/>
       <sources>
-        <!-- <source refid="wf:node">node_masterfolder_prep</source> -->
-        <source refid="file:urls">/application/inputs/list</source>
+        <source refid="wf:node">node_masterfolder_prep</source>
+        <!-- <source refid="file:urls">/application/inputs/list</source> -->
       </sources>
     </node>
     <node id="node_appcleanup">

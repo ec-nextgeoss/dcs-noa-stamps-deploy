@@ -66,16 +66,16 @@ def main():
         #published = ciop.publish(retrieved)
         #published = ciop.publish(os.path.join(processfolder,'patch.list'))
         
-        '''
+        
         with open("/application/inputs/list", "r") as f:
             lines = f.readlines()
             f.close()
     
         for line in lines:
-            line=line.rstrip('\n').rstrip('\r')
+            #line=line.rstrip('\n').rstrip('\r')
             published = ciop.publish(line, mode = "silent")
             ciop.log('INFO', 'Published ' + published)
-        '''
+      
     
 try:
     main()
