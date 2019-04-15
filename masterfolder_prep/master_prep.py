@@ -31,13 +31,13 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    PROCESSDIR="/shared"
+    PROCESSDIR="/shared/process"
     home='/home/aapostolakis'
 
 
     for inputfile in sys.stdin:
-        #masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
-        masterfolder=ciop.getparam('masterfolder')
+        masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
+        #masterfolder=ciop.getparam('masterfolder')
     
         ciop.log('INFO', 'Master folder is: ' + masterfolder)
            
@@ -54,11 +54,10 @@ def main():
         ciop.log('INFO', 'path exists  ' + PROCESSDIR + ' : ' + '%s'%os.path.exists(PROCESSDIR))
             
         if not os.path.exists(processfolder):
-            #retrieved = ciop.copy(masterfolder, ciop.tmp_dir)
             ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
-            #retrieved = ciop.copy(masterfolder, PROCESSDIR)
-            #assert(retrieved)
-            #ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
+            retrieved = ciop.copy(masterfolder, PROCESSDIR)
+            assert(retrieved)
+            ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
             
         # publish the result 
         # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
