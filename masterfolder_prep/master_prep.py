@@ -14,7 +14,8 @@ ciop = cioppy.Cioppy()
 
 # define the exit codes
 SUCCESS = 0
-ERR_STEP_1 = 2
+ERR_COPY = 1
+ERR_STAMPS_HEADER = 2
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -23,7 +24,8 @@ def clean_exit(exit_code):
         log_level = 'ERROR'  
    
     msg = { SUCCESS: 'Processing successfully concluded',
-           ERR_STEP_1: 'Error in STAMPS step 1'
+           ERR_COPY: 'Error in copy to process folder',
+           ERR_STAMPS_HEADER: 'Error in stamps_mc_header'
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -33,6 +35,8 @@ def main():
 
     PROCESSDIR="/shared/process"
     home='/home/aapostolakis'
+    runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_header/run_header_env.sh')
+
 
 
     for inputfile in sys.stdin:
@@ -56,15 +60,24 @@ def main():
         if not os.path.exists(processfolder):
             ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
             retrieved = ciop.copy(masterfolder, PROCESSDIR)
+            if not retrieved:
+                clean_exit(1)
             assert(retrieved)
             ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
             
+        if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
+            cmdlist = [ runstampsheader, '1', '5']
+            ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
+            res=subprocess.call(cmdlist)
+            if res!=0:
+                clean_exit(2)
+            assert(res == 0)
+ 
         # publish the result 
         # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
         ciop.log('INFO', 'Publishing patches')
         #published = ciop.publish(retrieved)
         #published = ciop.publish(os.path.join(processfolder,'patch.list'))
-        
         
         with open("/application/inputs/list", "r") as f:
             lines = f.readlines()
