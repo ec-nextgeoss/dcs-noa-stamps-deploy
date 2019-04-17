@@ -39,7 +39,7 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    PROCESSDIR="/shared/ath_sent1_test2/stamps_steps"
+    PROCESSDIR="/shared/ath_sent1_test2/stamps_steps_test"
     home='/home/aapostolakis'
     runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps_2/run_stamps_env.sh')
 
@@ -73,16 +73,16 @@ def main():
             
         os.chdir(processfolder)
         
-        for i in range(1,6):
+        for i in range(1,2):
             ciop.log('INFO', 'Processing PATCH ' + patch_no)
             ciop.log('INFO', 'Running Step %d for PATCH %s'%(i,patch_no))
         
             cmdlist = [ runstamps, '%d'%i, '%d'%i, 'y', '0', 'patch_list_split_'+patch_no, '1']
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
-            #res=subprocess.call(cmdlist)
-            res=0
+            res=subprocess.call(cmdlist)
+            #res=0
             if res!=0:
-                clean_exit(2+i)
+                clean_exit(1+i)
             assert(res == 0)
 
         '''

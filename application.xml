@@ -31,8 +31,8 @@
     <node id="node_stamps_v4_parallel">
       <job id="stamps_v4_parallel"/>
       <sources>
-        <source refid="wf:node">node_masterfolder_prep</source>
-        <!-- <source refid="file:urls">/application/inputs/list</source> -->
+        <!-- <source refid="wf:node">node_masterfolder_prep</source> -->
+        <source refid="file:urls">/application/inputs/list</source>
       </sources>
     </node>
     <node id="node_appcleanup">

@@ -35,8 +35,7 @@ def main():
 
     PROCESSDIR="/shared/process"
     home='/home/aapostolakis'
-    runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_header/run_header_env.sh')
-
+    runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_sb_2/run_header_env.sh')
 
 
     for inputfile in sys.stdin:
@@ -65,10 +64,13 @@ def main():
             assert(retrieved)
             ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
             
-        if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
-            cmdlist = [ runstampsheader, '1', '5']
+        if True or not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
+            os.chdir(processfolder)
+            ciop.log('INFO', 'Change working directory to  :' + processfolder)
+            cmdlist = [ runstampsheader, '1', '1', 'y', '0']
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
             res=subprocess.call(cmdlist)
+            #res=0
             if res!=0:
                 clean_exit(2)
             assert(res == 0)
