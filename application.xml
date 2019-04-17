@@ -13,6 +13,9 @@
     <jobTemplate id="stamps_v4_parallel">
       <streamingExecutable>/application/stamps_v4_parallel/stamps_1_5a.py</streamingExecutable>
     </jobTemplate>
+    <jobTemplate id="stamps_v4_aggr">
+      <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
+    </jobTemplate>
     <jobTemplate id="appcleanup">
       <streamingExecutable>/application/appcleanup/run</streamingExecutable>
       <defaultJobconf>
@@ -35,10 +38,17 @@
         <source refid="file:urls">/application/inputs/list</source>
       </sources>
     </node>
+    <node id="node_stamps_v4_aggr">
+      <job id="stamps_v4_aggr"/>
+      <sources>
+        <!-- <source refid="wf:node">node_stamps_v4_parallel</source> -->
+        <source refid="file:urls">/application/inputs/master</source>
+      </sources>
+    </node>
     <node id="node_appcleanup">
       <job id="appcleanup"/>
       <sources>
-        <source refid="wf:node">node_stamps_v4_parallel</source>        
+        <source refid="wf:node">node_stamps_v4_aggr</source>        
       </sources>
     </node>
   </workflow>

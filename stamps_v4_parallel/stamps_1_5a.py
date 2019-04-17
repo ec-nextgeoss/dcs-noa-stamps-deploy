@@ -58,19 +58,6 @@ def main():
         processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
         ciop.log('INFO', 'Master temp folder: ' + processfolder)
 
-        # retrieve the MER_RR__1P product to the local temporary folder TMPDIR provided by the framework (this folder is only used by this process)
-        # the ciop.copy function will use one of online resource available in the metadata to copy it to the TMPDIR folder
-        # the funtion returns the local path so the variable retrieved contains the local path to the MERIS product
-        
-        #retrieved = ciop.copy(inputfile, ciop.tmp_dir)
-        '''
-        if not os.path.exists(processfolder):
-            #retrieved = ciop.copy(masterfolder, ciop.tmp_dir)
-            retrieved = ciop.copy(masterfolder, PROCESSDIR)
-            assert(retrieved)
-            ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
-        '''
-            
         os.chdir(processfolder)
         
         for i in range(1,2):
@@ -85,18 +72,20 @@ def main():
                 clean_exit(1+i)
             assert(res == 0)
 
-        '''
-        with open('masterfolder', "w") as f:
-            f.write(processfolder)
-            f.close()
-        '''
         # publish the result 
-        # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
-        ciop.log('INFO', 'Publishing result '+ processfolder)
-        #published = ciop.publish(retrieved)
-        #published = ciop.publish(os.path.join(processfolder,'patch.list'))
-        published = ciop.publish(processfolder, mode='silent')
-        ciop.log('INFO', 'Published ' + published)
+        
+        with open("/application/inputs/master", "r") as f:
+            lines = f.readlines()
+            f.close()
+    
+        for line in lines:
+            published = ciop.publish(line+'\n', mode = "silent")
+            ciop.log('INFO', 'Publishing result ' + line)
+            ciop.log('INFO', 'Published ' + published)
+        
+        #ciop.log('INFO', 'Publishing result '+ processfolder)
+        #published = ciop.publish(processfolder+'\n', mode='silent')
+        #ciop.log('INFO', 'Published ' + published)
         
     #ciop.log('INFO', 'Removing temp folder ' + processfolder)    
     #shutil.rmtree(processfolder)
