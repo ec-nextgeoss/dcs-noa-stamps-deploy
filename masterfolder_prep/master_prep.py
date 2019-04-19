@@ -33,7 +33,7 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    PROCESSDIR="/shared/process"
+    PROCESSDIR="/shared/ath_sent1_test2/mtpreptest"
     home='/home/aapostolakis'
     runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_sb_2/run_header_env.sh')
 

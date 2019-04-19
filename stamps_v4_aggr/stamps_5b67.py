@@ -34,7 +34,7 @@ def clean_exit(exit_code):
     
 def main():
  
-    PROCESSDIR="/shared/process"
+    PROCESSDIR="/shared/ath_sent1_test2/stamps_steps_test"
     home='/home/aapostolakis'
     runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps_2/run_stamps_env.sh')
 
@@ -49,15 +49,15 @@ def main():
             
         os.chdir(processfolder)
         
-        for i in range(5,8):
-            ciop.log('INFO', 'Running Step %d for PATCH %s'%(i))
+        for i in range(5,6):
+            ciop.log('INFO', 'Running Step %d'%(i))
         
             patch_flag='y' if i==5 else 'n'
             stamps_PART_limitation='2' if i==5 else '0'
             cmdlist = [ runstamps, '%d'%i, '%d'%i, patch_flag, '0', '[]', stamps_PART_limitation]
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
-            #res=subprocess.call(cmdlist)
-            res=0
+            res=subprocess.call(cmdlist)
+            #res=0
             if res!=0:
                 clean_exit(1+i)
             assert(res == 0)
@@ -65,14 +65,10 @@ def main():
         # publish the result 
         # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
         ciop.log('INFO', 'Publishing result '+ processfolder)
-        #published = ciop.publish(retrieved)
-        #published = ciop.publish(os.path.join(processfolder,'patch.list'))
         published = ciop.publish(processfolder, mode='silent')
         ciop.log('INFO', 'Published ' + published)
         break
-        
-    #ciop.log('INFO', 'Removing temp folder ' + processfolder)    
-    #shutil.rmtree(processfolder)
+       
     
 try:
     main()

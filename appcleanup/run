@@ -4,9 +4,9 @@ import sys
 import atexit
 import os
 import shutil
+import subprocess
 
 # import the ciop functions (e.g. copy, log)
-
 import cioppy
 ciop = cioppy.Cioppy()
 
@@ -29,7 +29,7 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    PROCESSDIR="/tmp"
+    PROCESSDIR="/shared/systest"
 
 
     for inputfile in sys.stdin:
@@ -46,8 +46,16 @@ def main():
         #ciop.log('INFO', 'Published ' + published)
         
         if os.path.exists(processfolder):
-            ciop.log('INFO', 'Removing tmp master folder ' + processfolder)    
+            #ciop.log('INFO', 'Removing tmp master folder ' + processfolder)    
             #shutil.rmtree(processfolder)
+            os.chdir(processfolder)
+            syscom='/home/aapostolakis/StaMPS_4.1b/rt_matsyscomtest/run_syscom_env.sh'
+            cmdlist=[syscom]
+	    res=subprocess.call(cmdlist)
+	    #res=0
+            if res!=0:
+                clean_exit(2)
+            assert(res == 0)
     
 try:
     main()

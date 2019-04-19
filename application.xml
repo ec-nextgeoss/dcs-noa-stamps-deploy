@@ -15,6 +15,9 @@
     </jobTemplate>
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
+      <defaultJobconf>
+        <property id="ciop.job.max.tasks">1</property>
+      </defaultJobconf>
     </jobTemplate>
     <jobTemplate id="appcleanup">
       <streamingExecutable>/application/appcleanup/run</streamingExecutable>
