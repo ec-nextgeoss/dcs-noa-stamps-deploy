@@ -20,7 +20,7 @@
       </defaultJobconf>
     </jobTemplate>
     <jobTemplate id="appcleanup">
-      <streamingExecutable>/application/appcleanup/run</streamingExecutable>
+      <streamingExecutable>/application/appcleanup/appcleanup.py</streamingExecutable>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>
