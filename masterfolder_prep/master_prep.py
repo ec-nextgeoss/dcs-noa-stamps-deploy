@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import re
+import stat
 
 # import the ciop functions (e.g. copy, log)
 
@@ -54,6 +55,11 @@ def main():
     
         ciop.log('INFO', 'path exists  ' + processfolder + ' : ' + '%s'%os.path.exists(processfolder))
         ciop.log('INFO', 'path exists  ' + PROCESSDIR + ' : ' + '%s'%os.path.exists(PROCESSDIR))
+        
+        if not os.path.exists(PROCESSDIR):
+            os.makedirs(PROCESSDIR)
+            os.chmod(PROCESSDIR,stat.S_IWUSR)
+            os.chmod(PROCESSDIR,stat.S_IWOTH)
             
         if not os.path.exists(processfolder):
             ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
