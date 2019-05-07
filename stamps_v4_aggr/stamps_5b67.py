@@ -44,12 +44,12 @@ def main():
 
         masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
         ciop.log('INFO', 'Master folder : ' + masterfolder)
-        processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
-        ciop.log('INFO', 'Master process folder: ' + processfolder)
+        processfolder = masterfolder
+        #ciop.log('INFO', 'Master process folder: ' + processfolder)
             
         os.chdir(processfolder)
         
-        for i in range(6,8):
+        for i in range(5,8):
             ciop.log('INFO', 'Running Step %d'%(i))
         
             patch_flag='y' if i==5 else 'n'
