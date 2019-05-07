@@ -37,7 +37,6 @@ def main():
     home='/home/aapostolakis'
     runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_sb_2/run_header_env.sh')
 
-
     for inputfile in sys.stdin:
         masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
         #masterfolder=ciop.getparam('masterfolder')
@@ -64,7 +63,7 @@ def main():
             assert(retrieved)
             ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
             
-        if True or not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
+        if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
             os.chdir(processfolder)
             ciop.log('INFO', 'Change working directory to  :' + processfolder)
             cmdlist = [ runstampsheader, '1', '1', 'y', '0']
@@ -81,13 +80,15 @@ def main():
         #published = ciop.publish(retrieved)
         #published = ciop.publish(os.path.join(processfolder,'patch.list'))
         
-        with open("/application/inputs/list", "r") as f:
-            lines = f.readlines()
+        #with open("/application/inputs/list", "r") as f:
+	os.chdir(processfolder)
+	with open("patch.list", "r") as f:
+            patches = f.readlines()
             f.close()
     
-        for line in lines:
+        for patch in patches:
             #line=line.rstrip('\n').rstrip('\r')
-            published = ciop.publish(line, mode = "silent")
+            published = ciop.publish(os.path.join(processfolder,patch), mode = "silent")
             ciop.log('INFO', 'Published ' + published)
       
     

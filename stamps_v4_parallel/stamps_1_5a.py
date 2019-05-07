@@ -39,7 +39,6 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    PROCESSDIR="/shared/ath_sent1_test2/stamps_steps_test"
     home='/home/aapostolakis'
     runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps_2/run_stamps_env.sh')
 
@@ -55,7 +54,7 @@ def main():
         masterfolder=os.path.dirname(inputfile)
         ciop.log('INFO', 'Master folder is: ' + masterfolder)
         
-        processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
+        processfolder = masterfolder
         ciop.log('INFO', 'Master temp folder: ' + processfolder)
 
         os.chdir(processfolder)
@@ -66,30 +65,27 @@ def main():
         
             cmdlist = [ runstamps, '%d'%i, '%d'%i, 'y', '0', 'patch_list_split_'+patch_no, '1']
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
-            res=subprocess.call(cmdlist)
-            #res=0
+            #res=subprocess.call(cmdlist)
+            res=0
             if res!=0:
                 clean_exit(1+i)
             assert(res == 0)
 
         # publish the result 
         
-        with open("/application/inputs/master", "r") as f:
-            lines = f.readlines()
-            f.close()
+        #with open("/application/inputs/master", "r") as f:
+        #    lines = f.readlines()
+        #    f.close()
     
-        for line in lines:
-            published = ciop.publish(line+'\n', mode = "silent")
-            ciop.log('INFO', 'Publishing result ' + line)
-            ciop.log('INFO', 'Published ' + published)
+        #for line in lines:
+        #    published = ciop.publish(line+'\n', mode = "silent")
+        #    ciop.log('INFO', 'Publishing result ' + line)
+        #    ciop.log('INFO', 'Published ' + published)
         
-        #ciop.log('INFO', 'Publishing result '+ processfolder)
-        #published = ciop.publish(processfolder+'\n', mode='silent')
-        #ciop.log('INFO', 'Published ' + published)
+        ciop.log('INFO', 'Publishing result '+ processfolder)
+        published = ciop.publish(processfolder+'\n', mode='silent')
+        ciop.log('INFO', 'Published ' + published)
         
-    #ciop.log('INFO', 'Removing temp folder ' + processfolder)    
-    #shutil.rmtree(processfolder)
-    
 try:
     main()
 except SystemExit as e:

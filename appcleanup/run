@@ -29,33 +29,18 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    PROCESSDIR="/shared/systest"
-
-
     for inputfile in sys.stdin:
         # report activity in log
         ciop.log('INFO', 'The tmp master folder is: ' + inputfile)
  
         processfolder = inputfile.replace("\t","").replace("\n","").replace("\r","")
   
-        # publish the result 
-        # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
-        #ciop.log('INFO', 'Publishing result')
-        #published = ciop.publish(retrieved)
-        #published = ciop.publish(os.path.join(processfolder,'patch.list')
-        #ciop.log('INFO', 'Published ' + published)
-        
         if os.path.exists(processfolder):
-            #ciop.log('INFO', 'Removing tmp master folder ' + processfolder)    
-            #shutil.rmtree(processfolder)
-            os.chdir(processfolder)
-            syscom='/home/aapostolakis/StaMPS_4.1b/rt_matsyscomtest/run_syscom_env.sh'
-            cmdlist=[syscom]
-	    res=subprocess.call(cmdlist)
-	    #res=0
-            if res!=0:
+            ciop.log('INFO', 'Removing tmp master folder ' + processfolder)
+	    try:	 
+            	#shutil.rmtree(processfolder)
+	    except:
                 clean_exit(2)
-            assert(res == 0)
     
 try:
     main()

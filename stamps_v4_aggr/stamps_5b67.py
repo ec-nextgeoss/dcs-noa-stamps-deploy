@@ -49,15 +49,15 @@ def main():
             
         os.chdir(processfolder)
         
-        for i in range(5,6):
+        for i in range(6,8):
             ciop.log('INFO', 'Running Step %d'%(i))
         
             patch_flag='y' if i==5 else 'n'
             stamps_PART_limitation='2' if i==5 else '0'
             cmdlist = [ runstamps, '%d'%i, '%d'%i, patch_flag, '0', '[]', stamps_PART_limitation]
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
-            res=subprocess.call(cmdlist)
-            #res=0
+            #res=subprocess.call(cmdlist)
+            res=0
             if res!=0:
                 clean_exit(1+i)
             assert(res == 0)
