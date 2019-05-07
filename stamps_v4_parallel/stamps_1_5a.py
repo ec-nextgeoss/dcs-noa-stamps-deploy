@@ -58,6 +58,7 @@ def main():
         ciop.log('INFO', 'Master temp folder: ' + processfolder)
 
         os.chdir(processfolder)
+        run_proc=ciop.getparam('realrun')
         
         for i in range(1,6):
             ciop.log('INFO', 'Processing PATCH ' + patch_no)
@@ -65,11 +66,11 @@ def main():
         
             cmdlist = [ runstamps, '%d'%i, '%d'%i, 'y', '0', 'patch_list_split_'+patch_no, '1']
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
-            #res=subprocess.call(cmdlist)
-            res=0
-            if res!=0:
-                clean_exit(1+i)
-            assert(res == 0)
+            if run_proc=="yes":
+                res=subprocess.call(cmdlist)
+                if res!=0:
+                    clean_exit(1+i)
+                assert(res == 0)
 
         # publish the result 
         

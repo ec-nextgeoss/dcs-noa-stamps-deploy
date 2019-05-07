@@ -24,6 +24,9 @@
     </jobTemplate>
     <jobTemplate id="appcleanup">
       <streamingExecutable>/application/appcleanup/appcleanup.py</streamingExecutable>
+      <defaultParameters>
+         <parameter id="realrun">no</parameter>
+      </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>

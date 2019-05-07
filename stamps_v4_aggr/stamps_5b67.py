@@ -34,11 +34,10 @@ def clean_exit(exit_code):
     
 def main():
  
-    PROCESSDIR="/shared/ath_sent1_test2/stamps_steps_test"
     home='/home/aapostolakis'
     runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps_2/run_stamps_env.sh')
 
-   # Loops over all the inputs
+    # Loops over all the inputs
 
     for inputfile in sys.stdin:
 
@@ -48,7 +47,8 @@ def main():
         #ciop.log('INFO', 'Master process folder: ' + processfolder)
             
         os.chdir(processfolder)
-        
+        run_proc=ciop.getparam('realrun')
+
         for i in range(5,8):
             ciop.log('INFO', 'Running Step %d'%(i))
         
@@ -56,11 +56,11 @@ def main():
             stamps_PART_limitation='2' if i==5 else '0'
             cmdlist = [ runstamps, '%d'%i, '%d'%i, patch_flag, '0', '[]', stamps_PART_limitation]
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
-            #res=subprocess.call(cmdlist)
-            res=0
-            if res!=0:
-                clean_exit(1+i)
-            assert(res == 0)
+            if run_proc=="yes":
+                res=subprocess.call(cmdlist)
+                if res!=0:
+                    clean_exit(1+i)
+                assert(res == 0)
 
         # publish the result 
         # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)

@@ -37,11 +37,12 @@ def main():
   
         if os.path.exists(processfolder):
             ciop.log('INFO', 'Removing tmp master folder ' + processfolder)
-        try:
-            ii=1
-            #shutil.rmtree(processfolder)
-        except:
-            clean_exit(2)
+            run_proc=ciop.getparam('realrun')
+            try:
+                if run_proc=="yes":
+                    shutil.rmtree(processfolder)
+            except:
+                clean_exit(2)
     
 try:
     main()
