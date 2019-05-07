@@ -3,6 +3,9 @@
   <jobTemplates>
   	 <jobTemplate id="masterfolder_prep">
       <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
+      <defaultParameters>
+          <parameter id="outputdir">/shared/ath_sent1_test2/stamps_steps_2</parameter>
+      </defaultParameters>
        <defaultJobconf>
           <property id="ciop.job.max.tasks">1</property>
        </defaultJobconf>
