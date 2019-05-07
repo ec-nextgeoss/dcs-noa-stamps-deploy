@@ -61,6 +61,9 @@ def main():
                 if res!=0:
                     clean_exit(1+i)
                 assert(res == 0)
+                
+        #output_path = os.path.join(ciop.tmp_dir, 'output')
+        #os.makedirs(output_path)
 
         # publish the result 
         # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)

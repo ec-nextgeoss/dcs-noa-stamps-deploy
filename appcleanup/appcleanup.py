@@ -43,6 +43,8 @@ def main():
                     shutil.rmtree(processfolder)
             except:
                 clean_exit(2)
+                
+        break
     
 try:
     main()
