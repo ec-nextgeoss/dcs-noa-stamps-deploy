@@ -3,18 +3,21 @@
   <jobTemplates>
   	 <jobTemplate id="masterfolder_prep">
       <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
-	  <defaultParameters>
-	    <parameter id="masterfolder">/shared/ath_sent1_test2/mtprep/INSAR_20180717</parameter>
-	  </defaultParameters>
        <defaultJobconf>
           <property id="ciop.job.max.tasks">1</property>
        </defaultJobconf>
     </jobTemplate>
     <jobTemplate id="stamps_v4_parallel">
       <streamingExecutable>/application/stamps_v4_parallel/stamps_1_5a.py</streamingExecutable>
+      <defaultParameters>
+         <parameter id="realrun">no</parameter>
+      </defaultParameters>
     </jobTemplate>
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
+      <defaultParameters>
+         <parameter id="realrun">no</parameter>
+      </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>

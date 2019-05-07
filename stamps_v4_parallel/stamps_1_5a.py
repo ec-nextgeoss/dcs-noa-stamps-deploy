@@ -59,7 +59,7 @@ def main():
 
         os.chdir(processfolder)
         
-        for i in range(1,2):
+        for i in range(1,6):
             ciop.log('INFO', 'Processing PATCH ' + patch_no)
             ciop.log('INFO', 'Running Step %d for PATCH %s'%(i,patch_no))
         
