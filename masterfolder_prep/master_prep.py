@@ -81,8 +81,9 @@ def main():
         #published = ciop.publish(os.path.join(processfolder,'patch.list'))
         
         #with open("/application/inputs/list", "r") as f:
-	os.chdir(processfolder)
-	with open("patch.list", "r") as f:
+        
+        os.chdir(processfolder)
+        with open("patch.list", "r") as f:
             patches = f.readlines()
             f.close()
     
@@ -90,7 +91,6 @@ def main():
             #line=line.rstrip('\n').rstrip('\r')
             published = ciop.publish(os.path.join(processfolder,patch), mode = "silent")
             ciop.log('INFO', 'Published ' + published)
-      
     
 try:
     main()
