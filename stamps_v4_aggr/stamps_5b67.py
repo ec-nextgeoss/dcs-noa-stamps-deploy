@@ -48,8 +48,12 @@ def main():
             
         os.chdir(processfolder)
         run_proc=ciop.getparam('realrun')
-
-        for i in range(5,8):
+        stepsrange=ciop.getparam('runsteps').split('-')
+        startstep=int(stepsrange[0])
+        endstep=int(stepsrange[1])
+        # TODO validation
+        
+        for i in range(startstep,endstep+1):
             ciop.log('INFO', 'Running Step %d'%(i))
         
             patch_flag='y' if i==5 else 'n'
