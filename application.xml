@@ -20,7 +20,7 @@
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun">no</parameter>
+         <parameter id="realrun">yes</parameter>
          <parameter id="runsteps">5-7</parameter>
       </defaultParameters>
       <defaultJobconf>

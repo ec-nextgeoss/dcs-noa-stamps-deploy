@@ -59,8 +59,7 @@ def main():
         
         if not os.path.exists(PROCESSDIR):
             os.makedirs(PROCESSDIR)
-            os.chmod(PROCESSDIR,stat.S_IWUSR)
-            os.chmod(PROCESSDIR,stat.S_IWOTH)
+            os.chmod(PROCESSDIR,stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
             
         if not os.path.exists(processfolder):
             ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
