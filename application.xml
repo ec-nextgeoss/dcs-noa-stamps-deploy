@@ -20,17 +20,17 @@
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun">yes</parameter>
+         <parameter id="realrun">no</parameter>
          <parameter id="runsteps">5-7</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
       </defaultJobconf>
     </jobTemplate>
-    <jobTemplate id="appcleanup">
-      <streamingExecutable>/application/appcleanup/appcleanup.py</streamingExecutable>
+    <jobTemplate id="pubclean">
+      <streamingExecutable>/application/pub_clean/pub_clean.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun">no</parameter>
+         <parameter id="cleanup">no</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
@@ -59,8 +59,8 @@
         <!-- <source refid="file:urls">/application/inputs/master</source> -->
       </sources>
     </node>
-    <node id="node_appcleanup">
-      <job id="appcleanup"/>
+    <node id="node_pubclean">
+      <job id="pubclean"/>
       <sources>
         <source refid="wf:node">node_stamps_v4_aggr</source>    
       </sources>
