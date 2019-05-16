@@ -54,13 +54,13 @@ def main():
 
     for inputfile in sys.stdin:
         # report activity in log
-        ciop.log('INFO', 'The tmp master folder is: ' + inputfile)
+        ciop.log('INFO', 'The StaMPS processing folder is: ' + inputfile)
  
         processfolder = inputfile.replace("\t","").replace("\n","").replace("\r","")
 
         # Find processing time from STAMPS.log        
         try:
-            dur = processdur(fstampslog)
+            dur = processdur(os.path.join(processfolder,'STAMPS.log'))
             st_dur = str(dur)
             ciop.log('INFO', 'StaMPS PS processing time steps 1-7 : ' + st_dur)
         except:
@@ -71,6 +71,7 @@ def main():
             # zip INSAR folder and publish metalink
             try:
                 # Compress the folder and define the zip file
+		ciop.log('INFO', 'Compressing processing folder')
                 zipfolder = shutil.make_archive(processfolder, 'zip', processfolder)
                 # Publish the zipfolder
                 ciop.log('INFO', 'Publishing ' + zipfolder)
@@ -78,12 +79,11 @@ def main():
             except:
                 clean_exit(ERR_ZIP)
   
-        if os.path.exists(processfolder):
-            ciop.log('INFO', 'Removing tmp master folder ' + processfolder)
-            run_proc=ciop.getparam('cleanup')
+        del_proc=ciop.getparam('cleanup')
+        if os.path.exists(processfolder) and del_proc=="yes":
             try:
-                if run_proc=="yes":
-                    shutil.rmtree(processfolder)
+                ciop.log('INFO', 'Removing processing folder ' + processfolder)
+                shutil.rmtree(processfolder)
             except:
                 clean_exit(ERR_CLEANUP)
                 
