@@ -71,7 +71,7 @@ def main():
             # zip INSAR folder and publish metalink
             try:
                 # Compress the folder and define the zip file
-		ciop.log('INFO', 'Compressing processing folder')
+                ciop.log('INFO', 'Compressing processing folder')
                 zipfolder = shutil.make_archive(processfolder, 'zip', processfolder)
                 # Publish the zipfolder
                 ciop.log('INFO', 'Publishing ' + zipfolder)
