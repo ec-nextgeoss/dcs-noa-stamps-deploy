@@ -34,12 +34,14 @@ def main():
         ciop.log('INFO', 'The tmp master folder is: ' + inputfile)
  
         processfolder = inputfile.replace("\t","").replace("\n","").replace("\r","")
-        
-        # Compress the folder and define the zip file
-        zipfolder = shutil.make_archive(processfolder, 'zip')
-        # Publish the zipfolder
-        ciop.log('INFO', 'Publishing ' + zipfolder)
-        ciop.publish(zipfolder, metalink=True)
+
+        pub=ciop.getparam('pub')
+        if pub=='yes':
+            # Compress the folder and define the zip file
+            zipfolder = shutil.make_archive(processfolder, 'zip', processfolder)
+            # Publish the zipfolder
+            ciop.log('INFO', 'Publishing ' + zipfolder)
+            ciop.publish(zipfolder, metalink=True)
   
         if os.path.exists(processfolder):
             ciop.log('INFO', 'Removing tmp master folder ' + processfolder)

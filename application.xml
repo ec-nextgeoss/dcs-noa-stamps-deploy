@@ -31,6 +31,7 @@
       <streamingExecutable>/application/pub_clean/pub_clean.py</streamingExecutable>
       <defaultParameters>
          <parameter id="cleanup">no</parameter>
+         <parameter id="pub">no</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
