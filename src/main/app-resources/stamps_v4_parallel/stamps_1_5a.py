@@ -39,7 +39,7 @@ def clean_exit(exit_code):
 def main():
     # Loops over all the inputs
 
-    home='/home/aapostolakis'
+    home=os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'utils')
     runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps_2/run_stamps_env.sh')
 
 

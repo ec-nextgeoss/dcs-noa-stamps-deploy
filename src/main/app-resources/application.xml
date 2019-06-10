@@ -13,7 +13,7 @@
     <jobTemplate id="stamps_v4_parallel">
       <streamingExecutable>/application/stamps_v4_parallel/stamps_1_5a.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun">no</parameter>
+         <parameter id="realrun" title="Run Steps 1-5" abstract="Values: Yes No" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="runsteps">1-5</parameter>
       </defaultParameters>
     </jobTemplate>

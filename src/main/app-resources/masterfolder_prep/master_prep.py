@@ -36,7 +36,7 @@ def main():
 
     #PROCESSDIR="/shared/ath_sent1_test2/stamps_steps_2"
     PROCESSDIR=ciop.getparam('outputdir')
-    home='/home/aapostolakis'
+    home=os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'utils')
     runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_sb_2/run_header_env.sh')
 
     for inputfile in sys.stdin:
