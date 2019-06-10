@@ -58,8 +58,8 @@ def main():
         ciop.log('INFO', 'Master temp folder: ' + processfolder)
 
         os.chdir(processfolder)
-        run_proc=ciop.getparam('realrun')
-        stepsrange=ciop.getparam('runsteps').split('-')
+        run_proc=ciop.getparam('realrun15')
+        stepsrange=ciop.getparam('runsteps15').split('-')
         startstep=int(stepsrange[0])
         endstep=int(stepsrange[1])
         # TODO validation

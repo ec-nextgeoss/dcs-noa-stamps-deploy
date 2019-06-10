@@ -13,15 +13,15 @@
     <jobTemplate id="stamps_v4_parallel">
       <streamingExecutable>/application/stamps_v4_parallel/stamps_1_5a.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun" title="Run Steps 1-5" abstract="Values: Yes No" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
-         <parameter id="runsteps" title="Run Steps Range (1-5)" abstract="Values: x-y (min x = 1, max y = 5)" scope="runtime" maxOccurs="1" type="LiteralData">1-5</parameter>
+         <parameter id="realrun15" title="Run Steps 1-5" abstract="Values: Yes No" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="runsteps15" title="Run Steps Range (1-5)" abstract="Values: x-y (min x = 1, max y = 5)" scope="runtime" maxOccurs="1" type="LiteralData">1-5</parameter>
       </defaultParameters>
     </jobTemplate>
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun" title="Run Steps 5-7" abstract="Values: Yes No" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
-         <parameter id="runsteps" title="Run Steps Range (5-7)" abstract="Values: x-y (min x = 5, max y = 7)" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
+         <parameter id="realrun57" title="Run Steps 5-7" abstract="Values: Yes No" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="runsteps57" title="Run Steps Range (5-7)" abstract="Values: x-y (min x = 5, max y = 7)" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
