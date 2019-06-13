@@ -8,6 +8,8 @@ import subprocess
 from datetime import datetime
 import re
 import traceback
+import zipfile
+import zlib
 
 # import the ciop functions (e.g. copy, log)
 import cioppy
@@ -50,6 +52,12 @@ def processdur(fstampslog):
     except:
         raise
     
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file),compress_type=zipfile.ZIP_DEFLATED)
+
 def main():
     # Loops over all the inputs
 
@@ -74,8 +82,12 @@ def main():
             try:
                 # Compress the folder and define the zip file
                 ciop.log('INFO', 'Compressing processing folder :'+processfolder)
-                zipfolder = shutil.make_archive(processfolder, 'zip', processfolder)
-                # Publish the zipfolder
+                #zipfolder = shutil.make_archive(processfolder, 'zip', processfolder)
+                zipfolder=processfolder+'.zip'
+                zipf = zipfile.ZipFile(zipfolder, mode='w', allowZip64 = True)
+                zipdir(processfolder, zipf)
+                zipf.close()
+                # Publish the zipped folder
                 ciop.log('INFO', 'Publishing ' + zipfolder)
                 ciop.publish(zipfolder, metalink=True)
             except:
