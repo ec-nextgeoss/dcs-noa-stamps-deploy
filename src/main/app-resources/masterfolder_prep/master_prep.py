@@ -67,13 +67,18 @@ def main():
             if not retrieved:
                 clean_exit(1)
             assert(retrieved)
-            ciop.log('INFO', 'Retrieved ' + os.path.basename(retrieved))
+            ciop.log('INFO', 'Finished : ' + os.path.basename(retrieved))
+            #Possible alternative: Use of copytree
+            #try:
+            #    shutil.copytree(masterfolder, PROCESSDIR)
+            #except:
+            #    clean_exit(1)
             
         if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
             os.chdir(processfolder)
             ciop.log('INFO', 'Change working directory to  :' + processfolder)
             cmdlist = [ runstampsheader, '1', '1', 'y', '0']
-            ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
+            ciop.log('INFO', 'Run Command :' + ' '.join(cmdlist))
             res=subprocess.call(cmdlist)
             #res=0
             if res!=0:
@@ -81,12 +86,8 @@ def main():
             assert(res == 0)
  
         # publish the result 
-        # ciop.publish copies the data retrieved  to the distributed filesystem (HDFS)
+        # ciop.publish publish the patches names to create same number of susequent node instances
         ciop.log('INFO', 'Publishing patches')
-        #published = ciop.publish(retrieved)
-        #published = ciop.publish(os.path.join(processfolder,'patch.list'))
-        
-        #with open("/application/inputs/list", "r") as f:
         
         os.chdir(processfolder)
         with open("patch.list", "r") as f:

@@ -4,10 +4,11 @@
   	 <jobTemplate id="masterfolder_prep">
       <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
       <defaultParameters>
-          <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/ath_sent1_test2/stamps_steps_2</parameter>
+          <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/ath_sent1_test3/stamps_steps_1</parameter>
       </defaultParameters>
        <defaultJobconf>
           <property id="ciop.job.max.tasks">1</property>
+          <property id="mapred.task.timeout">10800000</property>
        </defaultJobconf>
     </jobTemplate>
     <jobTemplate id="stamps_v4_parallel">
@@ -16,6 +17,9 @@
          <parameter id="realrun15" title="Run Steps 1-5" abstract="Values: Yes No" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="runsteps15" title="Run Steps Range (1-5)" abstract="Values: x-y (min x = 1, max y = 5)" scope="runtime" maxOccurs="1" type="LiteralData">1-5</parameter>
       </defaultParameters>
+      <defaultJobconf>
+          <property id="mapred.task.timeout">10800000</property>
+      </defaultJobconf>
     </jobTemplate>
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
@@ -25,6 +29,7 @@
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
+        <property id="mapred.task.timeout">10800000</property> 
       </defaultJobconf>
     </jobTemplate>
     <jobTemplate id="pubclean">
@@ -35,6 +40,7 @@
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
+        <property id="mapred.task.timeout">10800000</property>
       </defaultJobconf>
     </jobTemplate>
   </jobTemplates>

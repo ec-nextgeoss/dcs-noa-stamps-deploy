@@ -7,6 +7,7 @@ import shutil
 import subprocess
 from datetime import datetime
 import re
+import traceback
 
 # import the ciop functions (e.g. copy, log)
 import cioppy
@@ -64,6 +65,7 @@ def main():
             st_dur = str(dur)
             ciop.log('INFO', 'StaMPS PS processing time steps 1-7 : ' + st_dur)
         except:
+            traceback.print_exc()
             clean_exit(ERR_TIME)
 
         pub=ciop.getparam('pub')
@@ -71,12 +73,13 @@ def main():
             # zip INSAR folder and publish metalink
             try:
                 # Compress the folder and define the zip file
-                ciop.log('INFO', 'Compressing processing folder')
+                ciop.log('INFO', 'Compressing processing folder :'+processfolder)
                 zipfolder = shutil.make_archive(processfolder, 'zip', processfolder)
                 # Publish the zipfolder
                 ciop.log('INFO', 'Publishing ' + zipfolder)
                 ciop.publish(zipfolder, metalink=True)
             except:
+                traceback.print_exc()
                 clean_exit(ERR_ZIP)
   
         del_proc=ciop.getparam('cleanup')
@@ -85,6 +88,7 @@ def main():
                 ciop.log('INFO', 'Removing processing folder ' + processfolder)
                 shutil.rmtree(processfolder)
             except:
+                traceback.print_exc()
                 clean_exit(ERR_CLEANUP)
                 
         break
