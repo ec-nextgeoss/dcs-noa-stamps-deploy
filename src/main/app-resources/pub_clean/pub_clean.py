@@ -55,8 +55,10 @@ def processdur(fstampslog):
 def zipdir(path, ziph):
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file),compress_type=zipfile.ZIP_DEFLATED)
+        for file in files + dirs:
+            ziph.write(os.path.join(root, file),
+                       os.path.relpath(os.path.join(root, file), os.path.join(path, os.path.pardir)),
+                       compress_type=zipfile.ZIP_DEFLATED)
 
 def main():
     # Loops over all the inputs
