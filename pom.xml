@@ -53,7 +53,7 @@
                       <scriptFile>${basedir}/src/main/app-resources/scripts/install/postinstall.sh</scriptFile>
                   </postinstallScriptlet>
                   <postremoveScriptlet>
-		      <scriptFile>${basedir}/src/main/resources/scripts/remove/postremove.sh</scriptFile>
+		      <scriptFile>${basedir}/src/main/app-resources/scripts/remove/postremove.sh</scriptFile>
 		  </postremoveScriptlet>
                 </configuration>
               </execution>
