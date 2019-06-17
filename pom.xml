@@ -49,6 +49,9 @@
                   <requires>
                     <require>miniconda</require>
                   </requires>
+                  <postinstallScriptlet combine.self="override">
+                      <script>conda update conda -y &amp;&amp; conda install --file /application/dependencies/python/packages.list &amp;&amp; ${project.build.directory}/src/main/app-resources/scripts/install/postinstall.sh</script>
+                  </postinstallScriptlet>
                 </configuration>
               </execution>
             </executions>
