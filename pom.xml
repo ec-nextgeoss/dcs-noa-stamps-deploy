@@ -45,6 +45,9 @@
                   <goal>rpm</goal>
                 </goals>
                 <configuration>
+                  <defineStatements combine.children="append">
+                    <defineStatement>__os_install_post %{nil}</defineStatement>
+                  </defineStatements>
                   <!-- Set here the dependencies installed with 'sudo yum install'-->
                   <requires>
                     <require>miniconda</require>
