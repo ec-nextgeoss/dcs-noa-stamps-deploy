@@ -11,7 +11,7 @@
     <version>2.0.1</version>
   </parent>
   <description>STAMPS workflow run for Sentinel-1</description>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <properties>
     <summary>NOA STAMPS</summary>
     <description>STAMPS workflow run for Sentinel-1</description>
@@ -28,10 +28,10 @@
     <profile>
       <id>package-app</id>
       <activation>
-         <property>
-           <name>env</name>
-           <value>ci</value>
-         </property>
+        <property>
+          <name>env</name>
+          <value>ci</value>
+        </property>
       </activation>
       <build>
         <plugins>
@@ -53,11 +53,11 @@
                     <require>miniconda</require>
                   </requires>
                   <postinstallScriptlet combine.self="override">
-                      <scriptFile>${basedir}/src/main/app-resources/scripts/install/postinstall.sh</scriptFile>
+                    <scriptFile>${basedir}/src/main/app-resources/scripts/install/postinstall.sh</scriptFile>
                   </postinstallScriptlet>
                   <postremoveScriptlet>
-		      <scriptFile>${basedir}/src/main/app-resources/scripts/remove/postremove.sh</scriptFile>
-		  </postremoveScriptlet>
+                    <scriptFile>${basedir}/src/main/app-resources/scripts/remove/postremove.sh</scriptFile>
+                  </postremoveScriptlet>
                 </configuration>
               </execution>
             </executions>
