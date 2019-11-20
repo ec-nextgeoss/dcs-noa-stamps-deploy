@@ -4,7 +4,7 @@
   	 <jobTemplate id="masterfolder_prep">
       <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
       <defaultParameters>
-          <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/ath_sent1_test3/stamps_steps_1</parameter>
+          <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/sant_sent1/stamps_steps_1</parameter>
       </defaultParameters>
        <defaultJobconf>
           <property id="ciop.job.max.tasks">1</property>
