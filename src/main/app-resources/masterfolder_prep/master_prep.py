@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import re
 import stat
+import fnmatch
 
 # import the ciop functions (e.g. copy, log)
 
@@ -90,10 +91,19 @@ def main():
         ciop.log('INFO', 'Publishing patches')
         
         os.chdir(processfolder)
-        with open("patch.list", "r") as f:
-            patches = f.readlines()
-            f.close()
-    
+        if os.path.isfile("path.list"):
+            with open("patch.list", "r") as f:
+                patches = f.readlines()
+                f.close()
+        else:
+            patches=[]
+            for root, dirs, files in os.walk("."):
+                for dirname in dirs:
+                    if fnmatch.fnmatch(dirname, "PATCH_*"):
+                        patches=patches+[dirname+"\r\n"]
+	
+        ciop.log('INFO', "Patch list:\n%s"%patches)    
+        
         for patch in patches:
             #line=line.rstrip('\n').rstrip('\r')
             published = ciop.publish(os.path.join(processfolder,patch), mode = "silent")
