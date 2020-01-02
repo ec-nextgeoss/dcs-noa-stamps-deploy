@@ -88,9 +88,24 @@ def main():
  
         # publish the result 
         # ciop.publish publish the patches names to create same number of susequent node instances
-        ciop.log('INFO', 'Publishing patches')
-        
         os.chdir(processfolder)
+
+        #set parameters to stamps
+        ciop.log('INFO', 'Setting Parameters')
+        paramlistst=ciop.getparam('setparams')
+        paramlist = [s.split("=") for s in paramlistst.split("#")]
+        runsetparm = os.path.join(home,'StaMPS_4.1b/rt_setparm/run_setparm.sh')
+
+        for p in paramlist:
+            if p[0]:
+                ciop.log('INFO', 'Setting Parameter:%s'%p[0])
+            if len(p)>1:
+                cmdlist=[runsetparm, '%s'%p[0].strip(), '%s'%p[1].strip()]
+                res=subprocess.call(cmdlist)
+
+        #define and publish patch list
+        ciop.log('INFO', 'Publishing patches')
+
         if os.path.isfile("path.list"):
             with open("patch.list", "r") as f:
                 patches = f.readlines()

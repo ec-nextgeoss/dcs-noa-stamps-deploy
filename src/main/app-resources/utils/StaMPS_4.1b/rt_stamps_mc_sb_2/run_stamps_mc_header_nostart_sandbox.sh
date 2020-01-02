@@ -27,6 +27,7 @@ else
       args="${args} \"${token}\"" 
       shift
   done
+  export MATLAB_SHELL=
   eval "\"${exe_dir}/stamps_mc_header_nostart_sandbox.exe\"" $args
 fi
 exit
