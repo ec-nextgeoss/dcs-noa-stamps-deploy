@@ -5,7 +5,7 @@
       <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
       <defaultParameters>
           <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/sant_stamps_run1</parameter>
-          <parameter id="setparams" title="Stamps Parameters" abstract="param1=value1#param2=value2..." scope="runtime" maxOccurs="1" type="LiteralData"></parameter>
+          <parameter id="setparams" title="Stamps Parameters" abstract="param1=value1#param2=value2..." scope="runtime" maxOccurs="1" type="LiteralData">empty</parameter>
        </defaultParameters>
        <defaultJobconf>
           <property id="ciop.job.max.tasks">1</property>
@@ -16,7 +16,7 @@
       <streamingExecutable>/application/stamps_v4_parallel/stamps_1_5a.py</streamingExecutable>
       <defaultParameters>
          <parameter id="realrun15" title="Run Steps 1-5" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
-         <parameter id="runsteps15" title="Run Steps Range (1-5)" abstract="Values: x-y (min x = 1, max y = 5)" scope="runtime" maxOccurs="1" type="LiteralData">1-5</parameter>
+         <parameter id="runsteps15" title="Run Steps Range (1-5)" abstract="Values: x-y (min x = 1, max y = 5), 5 is for step 5a" scope="runtime" maxOccurs="1" type="LiteralData">1-5</parameter>
       </defaultParameters>
       <defaultJobconf>
           <property id="mapred.task.timeout">10800000</property>
@@ -26,7 +26,7 @@
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
       <defaultParameters>
          <parameter id="realrun57" title="Run Steps 5-7" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
-         <parameter id="runsteps57" title="Run Steps Range (5-7)" abstract="Values: x-y (min x = 5, max y = 7)" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
+         <parameter id="runsteps57" title="Run Steps Range (5-7)" abstract="Values: x-y (min x = 5, max y = 7), 5 is for step 5b" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
