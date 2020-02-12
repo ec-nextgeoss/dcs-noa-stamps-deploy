@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import re
 import stat
+import fnmatch
 
 # import the ciop functions (e.g. copy, log)
 
@@ -40,20 +41,13 @@ def main():
     runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_sb_2/run_header_env.sh')
 
     for inputfile in sys.stdin:
-        masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
-        #masterfolder=ciop.getparam('masterfolder')
+        #masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
+        masterfolder=ciop.getparam('masterfolder')
     
         ciop.log('INFO', 'Master folder is: ' + masterfolder)
            
         processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
         ciop.log('INFO', 'Master temp folder: ' + processfolder)
-    
-        # retrieve the MER_RR__1P product to the local temporary folder TMPDIR provided by the framework (this folder is only used by this process)
-        # the ciop.copy function will use one of online resource available in the metadata to copy it to the TMPDIR folder
-        # the funtion returns the local path so the variable retrieved contains the local path to the MERIS product
-        
-        #retrieved = ciop.copy(inputfile, ciop.tmp_dir)
-    
         ciop.log('INFO', 'path exists  ' + processfolder + ' : ' + '%s'%os.path.exists(processfolder))
         ciop.log('INFO', 'path exists  ' + PROCESSDIR + ' : ' + '%s'%os.path.exists(PROCESSDIR))
         
@@ -73,27 +67,54 @@ def main():
             #    shutil.copytree(masterfolder, PROCESSDIR)
             #except:
             #    clean_exit(1)
-            
-        if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
-            os.chdir(processfolder)
-            ciop.log('INFO', 'Change working directory to  :' + processfolder)
-            cmdlist = [ runstampsheader, '1', '1', 'y', '0']
-            ciop.log('INFO', 'Run Command :' + ' '.join(cmdlist))
-            res=subprocess.call(cmdlist)
-            #res=0
-            if res!=0:
-                clean_exit(2)
-            assert(res == 0)
+
+        #change working directory
+        os.chdir(processfolder)
+        ciop.log('INFO', 'Change working directory to  :' + processfolder)
+
+        #set parameters to stamps
+        ciop.log('INFO', 'Setting Parameters')
+        paramlistst = ciop.getparam('setparams').strip()
+        paramlist = []
+        if paramlistst:
+            paramlist = [s.split("=") for s in paramlistst.split("#")]
+            runsetparm = os.path.join(home,'StaMPS_4.1b/rt_setparm/run_setparm.sh')
+        for p in paramlist:
+            if len(p)>1:
+                cmdlist = [runsetparm, '%s'%p[0].strip(), '%s'%p[1].strip()]
+                ciop.log('INFO', 'Setting Parameter:'+' '.join(cmdlist))
+                res=subprocess.call(cmdlist)
+
+        #run stamps header            
+        #if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
+        cmdlist = [ runstampsheader, '1', '1', 'y', '0']
+        ciop.log('INFO', 'Run Command :' + ' '.join(cmdlist))
+        res=subprocess.call(cmdlist)
+        #res=0
+        if res!=0:
+            clean_exit(2)
+        assert(res == 0)
  
         # publish the result 
         # ciop.publish publish the patches names to create same number of susequent node instances
-        ciop.log('INFO', 'Publishing patches')
-        
         os.chdir(processfolder)
-        with open("patch.list", "r") as f:
-            patches = f.readlines()
-            f.close()
-    
+
+        #define and publish patch list
+        ciop.log('INFO', 'Publishing patches')
+
+        if os.path.isfile("path.list"):
+            with open("patch.list", "r") as f:
+                patches = f.readlines()
+                f.close()
+        else:
+            patches=[]
+            for root, dirs, files in os.walk("."):
+                for dirname in dirs:
+                    if fnmatch.fnmatch(dirname, "PATCH_*"):
+                        patches=patches+[dirname+"\r\n"]
+	
+        ciop.log('INFO', "Patch list:\n%s"%patches)    
+        
         for patch in patches:
             #line=line.rstrip('\n').rstrip('\r')
             published = ciop.publish(os.path.join(processfolder,patch), mode = "silent")
