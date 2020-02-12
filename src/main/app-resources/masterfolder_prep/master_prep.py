@@ -41,8 +41,8 @@ def main():
     runstampsheader = os.path.join(home,'StaMPS_4.1b/rt_stamps_mc_sb_2/run_header_env.sh')
 
     for inputfile in sys.stdin:
-        masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
-        #masterfolder=ciop.getparam('masterfolder')
+        #masterfolder=inputfile.replace("\t","").replace("\n","").replace("\r","")
+        masterfolder=ciop.getparam('masterfolder')
     
         ciop.log('INFO', 'Master folder is: ' + masterfolder)
            

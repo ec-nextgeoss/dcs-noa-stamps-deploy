@@ -4,6 +4,7 @@
   	 <jobTemplate id="masterfolder_prep">
       <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
       <defaultParameters>
+          <parameter id="masterfolder" title="Input (INSAR) folder" abstract="Path to Input directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/sant_test1/PS_platform/INSAR_20171108</parameter>
           <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/sant_stamps_run1</parameter>
           <parameter id="setparams" title="Stamps Parameters" abstract="param1=value1#param2=value2..." scope="runtime" maxOccurs="1" type="LiteralData">empty</parameter>
        </defaultParameters>
@@ -36,8 +37,10 @@
     <jobTemplate id="pubclean">
       <streamingExecutable>/application/pub_clean/pub_clean.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="cleanup" title="Clean up processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="kml" title="Create KML" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="pub" title="Publish Processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="pub2" title="Publish plot files only" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="cleanup" title="Clean up processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>

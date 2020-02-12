@@ -20,6 +20,7 @@ SUCCESS = 0
 ERR_CLEANUP = 2
 ERR_TIME = 3
 ERR_ZIP = 4
+ERR_KML = 5
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -30,7 +31,7 @@ def clean_exit(exit_code):
     msg = { SUCCESS: 'Processing successfully concluded',
             ERR_CLEANUP: 'Failed cleaning master folder',
             ERR_TIME: 'Calculation of process duration failed. File STAMPS.log may not exist or it is incomplete',
-            ERR_ZIP: 'Failed to zip and publish INSAR folder'
+            ERR_ZIP: 'Failed to zip and publish INSAR folder or plot files'
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -56,9 +57,16 @@ def zipdir(path, ziph):
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
         for file in files + dirs:
-            ziph.write(os.path.join(root, file),
-                       os.path.relpath(os.path.join(root, file), os.path.join(path, os.path.pardir)),
+            ziph.write(os.path.join(root, file),\
+                       os.path.relpath(os.path.join(root, file), os.path.join(path, os.path.pardir)),\
                        compress_type=zipfile.ZIP_DEFLATED)
+
+def zipfiles(filelist, ziph):
+    # ziph is zipfile handle
+    for f in filelist:
+        ziph.write(f, os.path.relpath(f, os.path.join(os.path.dirname(f), os.path.pardir)),\
+                   compress_type=zipfile.ZIP_DEFLATED)
+
 
 def main():
     # Loops over all the inputs
@@ -78,6 +86,24 @@ def main():
             traceback.print_exc()
             clean_exit(ERR_TIME)
 
+        kml=ciop.getparam('kml')
+        if kml=='yes':
+            # create kml
+            try:
+                home = os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'utils')
+                runkml = os.path.join(home,'StaMPS_4.1b/rt_createkml/run_createkml.sh')
+                ciop.log('INFO', 'Create KML')
+                cmdlist = [ runkml, 'dummy']
+                ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
+                res=subprocess.call(cmdlist)
+                if res!=0:
+                    clean_exit(ERR_KML)
+                assert(res == 0)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_KML)
+
+
         pub=ciop.getparam('pub')
         if pub=='yes':
             # zip INSAR folder and publish metalink
@@ -95,6 +121,33 @@ def main():
             except:
                 traceback.print_exc()
                 clean_exit(ERR_ZIP)
+
+        pub2=ciop.getparam('pub2')
+        if pub2=='yes':
+            # zip folder with plot files
+            try:
+                ciop.log('INFO', 'Compressing plot files')
+                zipfolder=os.path.join(os.path.dirname(processfolder),'plotfiles.zip')
+                zipf = zipfile.ZipFile(zipfolder, mode='w', allowZip64 = True)
+                plot_files_list=['mean_v.mat', 'parms.mat', 'ph2.mat', 'phuw2.mat', 'ps2.mat', 'ps_plot_v-dso.mat',\
+                                 'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml']
+                plot_files_created=[]
+                for f in plot_files_list:
+                    fp=os.path.join(processfolder,f)
+                    if os.path.exists(fp):
+                        plot_files_created.append(fp)
+                if len(plot_files_created)>0:
+                    ciop.log('INFO', 'Compressing :'+str(plot_files_created))
+                    zipfiles(plot_files_created, zipf)
+                    zipf.close()
+                    ciop.log('INFO', 'Publishing ' + zipfolder)
+                    ciop.publish(zipfolder, metalink=True)
+                else:
+                    ciop.log('INFO', 'No plot files to publish')
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_ZIP)
+
   
         del_proc=ciop.getparam('cleanup')
         if os.path.exists(processfolder) and del_proc=="yes":
