@@ -92,6 +92,7 @@ def main():
             try:
                 home = os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'utils')
                 runkml = os.path.join(home,'StaMPS_4.1b/rt_createkml/run_createkml.sh')
+                os.chdir(processfolder)
                 ciop.log('INFO', 'Create KML')
                 cmdlist = [ runkml, 'dummy']
                 ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
