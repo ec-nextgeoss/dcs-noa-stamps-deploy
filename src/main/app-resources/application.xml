@@ -38,6 +38,7 @@
       <streamingExecutable>/application/pub_clean/pub_clean.py</streamingExecutable>
       <defaultParameters>
          <parameter id="kml" title="Create KML" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="kmlpoints" title="KML point density" abstract="Select higher number for lower density" scope="runtime" maxOccurs="1" type="LiteralData">100</parameter>
          <parameter id="pub" title="Publish Processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="pub2" title="Publish plot files only" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="cleanup" title="Clean up processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>

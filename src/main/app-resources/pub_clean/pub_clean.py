@@ -94,7 +94,8 @@ def main():
                 runkml = os.path.join(home,'StaMPS_4.1b/rt_createkml/run_createkml.sh')
                 os.chdir(processfolder)
                 ciop.log('INFO', 'Create KML')
-                cmdlist = [ runkml, 'dummy']
+                kmlpoints = ciop.getparam('kmlpoints')
+                cmdlist = [ runkml, kmlpoints]
                 ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
                 res=subprocess.call(cmdlist)
                 if res!=0:
