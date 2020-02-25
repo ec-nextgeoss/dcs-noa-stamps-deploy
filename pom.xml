@@ -45,10 +45,19 @@
                   <goal>rpm</goal>
                 </goals>
                 <configuration>
+                  <defineStatements combine.children="append">
+                    <defineStatement>__os_install_post %{nil}</defineStatement>
+                  </defineStatements>
                   <!-- Set here the dependencies installed with 'sudo yum install'-->
                   <requires>
                     <require>miniconda</require>
                   </requires>
+                  <postinstallScriptlet combine.self="override">
+                    <scriptFile>${basedir}/src/main/app-resources/scripts/install/postinstall.sh</scriptFile>
+                  </postinstallScriptlet>
+                  <postremoveScriptlet>
+                    <scriptFile>${basedir}/src/main/app-resources/scripts/remove/postremove.sh</scriptFile>
+                  </postremoveScriptlet>
                 </configuration>
               </execution>
             </executions>
