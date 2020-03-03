@@ -1,0 +1,25 @@
+ant:
+<ant>
+  <mkdir dir="/home/celene/setparm/for_redistribution" />
+  <mkdir dir="/home/celene/setparm/for_testing" />
+  <mkdir dir="/home/celene/setparm/for_redistribution_files_only" />
+</ant>
+mcc -o setparm -W main:setparm -T link:exe -d /home/celene/setparm/for_testing -v /home/celene/STAMPS_4.1b/StaMPS-master/matlab/setparm.m 
+[Warning: Duplicate directory name:
+/home/celene/STAMPS_4.1b/StaMPS-master//matlab] 
+[Warning: Duplicate directory name:
+/home/celene/STAMPS_4.1b/StaMPS-master//matlab] 
+Compiler version: 6.0 (R2015a)
+Dependency analysis by REQUIREMENTS.
+[Warning: Adding path "/home/celene/STAMPS_4.1b/StaMPS-master/matlab" to
+Compiler path instance.] 
+Parsing file "/home/celene/STAMPS_4.1b/StaMPS-master/matlab/setparm.m"
+	(Referenced from: "Compiler Command Line").
+Deleting 0 temporary MEX authorization files.
+Generating file "/home/celene/setparm/for_testing/readme.txt".
+Generating file "/home/celene/setparm/for_testing/run_setparm.sh".
+Packaging...
+Creating the bundle...
+Web based installer created at /home/celene/setparm/for_redistribution/MyAppInstaller_web.install.
+Packaging complete.
+Elapsed packaging time was: 25 seconds.
