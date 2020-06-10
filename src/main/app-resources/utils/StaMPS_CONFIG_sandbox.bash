@@ -8,7 +8,7 @@ export SAR_ODR_DIR="/home/celene/auxillary/orbits/ODR/"
 #export DORIS_BIN="/usr/local/bin"
 export SNAPHU_BIN="$_CIOP_APPLICATION_PATH/utils/snaphu/bin"
 export ISCECONTRIB="$_CIOP_APPLICATION_PATH/utils/ISCEcontrib/bin"
-export TRIANGLE_BIN="$_CIOP_APPLICATION_PATH/utils/triangle"
+export TRIANGLE_BIN="$_CIOP_APPLICATION_PATH/utils/bin/triangle"
 
 export ROI_PAC="$SAR/ROI_PAC"
 #####################################
