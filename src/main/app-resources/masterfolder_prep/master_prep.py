@@ -18,6 +18,7 @@ ciop = cioppy.Cioppy()
 SUCCESS = 0
 ERR_COPY = 1
 ERR_STAMPS_HEADER = 2
+ERR_SETPARM = 3
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -27,7 +28,8 @@ def clean_exit(exit_code):
    
     msg = { SUCCESS: 'Processing successfully concluded',
            ERR_COPY: 'Error in copy to process folder',
-           ERR_STAMPS_HEADER: 'Error in stamps_mc_header'
+           ERR_STAMPS_HEADER: 'Error in stamps_mc_header',
+           ERR_SETPARM: 'Error in parameter setting'
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -74,16 +76,25 @@ def main():
 
         #set parameters to stamps
         ciop.log('INFO', 'Setting Parameters')
+        runsetparm = os.path.join(home,'StaMPS_4.1b/rt_setparm/run_setparm.sh')
+        cmdlist = [runsetparm]
+        ciop.log('INFO', 'Log saved parameters')
+        res=subprocess.call(cmdlist)
+        if res!=0:
+            clean_exit(3)
+        assert(res == 0)
         paramlistst = ciop.getparam('setparams').strip()
         paramlist = []
         if paramlistst:
             paramlist = [s.split("=") for s in paramlistst.split("#")]
-            runsetparm = os.path.join(home,'StaMPS_4.1b/rt_setparm/run_setparm.sh')
         for p in paramlist:
             if len(p)>1:
                 cmdlist = [runsetparm, '%s'%p[0].strip(), '%s'%p[1].strip()]
                 ciop.log('INFO', 'Setting Parameter:'+' '.join(cmdlist))
                 res=subprocess.call(cmdlist)
+        if res!=0:
+            clean_exit(3)
+        assert(res == 0)
 
         #run stamps header            
         #if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
