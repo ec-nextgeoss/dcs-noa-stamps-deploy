@@ -26,8 +26,8 @@
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun57" title="Run Steps 5-7" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
-         <parameter id="runsteps57" title="Run Steps Range (5-7)" abstract="Values: x-y (min x = 5, max y = 7), 5 is for step 5b" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
+         <parameter id="realrun57" title="Run Steps 5-8" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="runsteps57" title="Run Steps Range (5-8)" abstract="Values: x-y (min x = 5, max y = 8), 5 is for step 5b" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>

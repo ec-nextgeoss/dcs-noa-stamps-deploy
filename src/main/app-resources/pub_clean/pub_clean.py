@@ -132,7 +132,7 @@ def main():
                 zipfolder=os.path.join(os.path.dirname(processfolder),'plotfiles.zip')
                 zipf = zipfile.ZipFile(zipfolder, mode='w', allowZip64 = True)
                 plot_files_list=['mean_v.mat', 'parms.mat', 'ph2.mat', 'phuw2.mat', 'ps2.mat', 'ps_plot_v-dso.mat',\
-                                 'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml']
+                                 'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml','mv2.mat']
                 plot_files_created=[]
                 for f in plot_files_list:
                     fp=os.path.join(processfolder,f)
