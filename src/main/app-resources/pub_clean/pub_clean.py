@@ -10,6 +10,7 @@ import re
 import traceback
 import zipfile
 import zlib
+import ckanxml
 
 # import the ciop functions (e.g. copy, log)
 import cioppy
@@ -178,6 +179,8 @@ def main():
             except:
                 traceback.print_exc()
                 clean_exit(ERR_CLEANUP)
+
+	#ckanxml.updatexml('/shared/sant_test1/PS_platform/INSAR_20171108',os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'pub_clean'),processfolder)
                 
         break
     
