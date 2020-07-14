@@ -21,6 +21,7 @@ ERR_CLEANUP = 2
 ERR_TIME = 3
 ERR_ZIP = 4
 ERR_KML = 5
+ERR_JPG = 6
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -31,7 +32,9 @@ def clean_exit(exit_code):
     msg = { SUCCESS: 'Processing successfully concluded',
             ERR_CLEANUP: 'Failed cleaning master folder',
             ERR_TIME: 'Calculation of process duration failed. File STAMPS.log may not exist or it is incomplete',
-            ERR_ZIP: 'Failed to zip and publish INSAR folder or plot files'
+            ERR_ZIP: 'Failed to zip and publish INSAR folder or plot files',
+            ERR_KML: 'Failed to create kml',
+            ERR_JPG: 'Failed to create jpg'
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -104,6 +107,21 @@ def main():
             except:
                 traceback.print_exc()
                 clean_exit(ERR_KML)
+            # create jpg
+            try:
+                home = os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'utils')
+                runjpg = os.path.join(home,'StaMPS_4.1b/run_matlab.sh')
+                os.chdir(processfolder)
+                ciop.log('INFO', 'Create jpg')
+                cmdlist = [ runjpg, 'plotvdo.exe']
+                ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
+                res=subprocess.call(cmdlist)
+                if res!=0:
+                    clean_exit(ERR_KML)
+                assert(res == 0)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_KML)
 
 
         pub=ciop.getparam('pub')
@@ -132,7 +150,8 @@ def main():
                 zipfolder=os.path.join(os.path.dirname(processfolder),'plotfiles.zip')
                 zipf = zipfile.ZipFile(zipfolder, mode='w', allowZip64 = True)
                 plot_files_list=['mean_v.mat', 'parms.mat', 'ph2.mat', 'phuw2.mat', 'ps2.mat', 'ps_plot_v-dso.mat',\
-                                 'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml','mv2.mat']
+                                 'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml','mv2.mat', \
+                                 'plotvdo.jpg', 'plotvdo.fig']
                 plot_files_created=[]
                 for f in plot_files_list:
                     fp=os.path.join(processfolder,f)
