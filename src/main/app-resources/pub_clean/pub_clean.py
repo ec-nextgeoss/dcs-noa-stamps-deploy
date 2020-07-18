@@ -11,6 +11,7 @@ import traceback
 import zipfile
 import zlib
 import ckanxml
+import storeterradue
 
 # import the ciop functions (e.g. copy, log)
 import cioppy
@@ -152,7 +153,7 @@ def main():
                 zipf = zipfile.ZipFile(zipfolder, mode='w', allowZip64 = True)
                 plot_files_list=['mean_v.mat', 'parms.mat', 'ph2.mat', 'phuw2.mat', 'ps2.mat', 'ps_plot_v-dso.mat',\
                                  'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml','mv2.mat', \
-                                 'plotvdo.jpg', 'plotvdo.fig']
+                                 'plotvdo.jpg', 'plotvdo.fig', 'ckaninfo.xml']
                 plot_files_created=[]
                 for f in plot_files_list:
                     fp=os.path.join(processfolder,f)
@@ -180,7 +181,14 @@ def main():
                 traceback.print_exc()
                 clean_exit(ERR_CLEANUP)
 
-	#ckanxml.updatexml('/shared/sant_test1/PS_platform/INSAR_20171108',os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'pub_clean'),processfolder)
+        if True:
+            harvestdir = ckanxml.updatexml('/shared/sant_test1/PS_platform/INSAR_20171108',os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'pub_clean'),processfolder)
+            files = [
+                {'name':'gevelo.kml', 'content_type':'text/xml'},
+                {'name':'plotvdo.jpg', 'content_type':'image/jpeg'},
+                {'name':'ckaninfo.xml', 'content_type':'text/xml'}
+            ]
+            storeterradue.sendfiles(files, processfolder, harvestdir)
                 
         break
     
