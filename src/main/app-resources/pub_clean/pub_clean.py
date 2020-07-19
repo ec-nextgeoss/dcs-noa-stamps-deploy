@@ -24,6 +24,7 @@ ERR_TIME = 3
 ERR_ZIP = 4
 ERR_KML = 5
 ERR_JPG = 6
+ERR_HARVEST = 7
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -36,7 +37,8 @@ def clean_exit(exit_code):
             ERR_TIME: 'Calculation of process duration failed. File STAMPS.log may not exist or it is incomplete',
             ERR_ZIP: 'Failed to zip and publish INSAR folder or plot files',
             ERR_KML: 'Failed to create kml',
-            ERR_JPG: 'Failed to create jpg'
+            ERR_JPG: 'Failed to create jpg',
+            ERR_HARVEST: 'Publish to harvest service failed'
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -171,6 +173,20 @@ def main():
                 traceback.print_exc()
                 clean_exit(ERR_ZIP)
 
+        harvest=ciop.getparam('harvest')
+        if harvest=="yes":
+            try:
+                harvestdir = ckanxml.updatexml('/shared/sant_test1/PS_platform/INSAR_20171108',os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'pub_clean'),processfolder)
+                files = [
+                    {'name':'gevelo.kml', 'content_type':'text/xml'},
+                    {'name':'plotvdo.jpg', 'content_type':'image/jpeg'},
+                    {'name':'ckaninfo.xml', 'content_type':'text/xml'}
+                ]
+                storeterradue.sendfiles(files, processfolder, harvestdir)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_HARVEST)
+
   
         del_proc=ciop.getparam('cleanup')
         if os.path.exists(processfolder) and del_proc=="yes":
@@ -181,15 +197,6 @@ def main():
                 traceback.print_exc()
                 clean_exit(ERR_CLEANUP)
 
-        if True:
-            harvestdir = ckanxml.updatexml('/shared/sant_test1/PS_platform/INSAR_20171108',os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'pub_clean'),processfolder)
-            files = [
-                {'name':'gevelo.kml', 'content_type':'text/xml'},
-                {'name':'plotvdo.jpg', 'content_type':'image/jpeg'},
-                {'name':'ckaninfo.xml', 'content_type':'text/xml'}
-            ]
-            storeterradue.sendfiles(files, processfolder, harvestdir)
-                
         break
     
 try:
