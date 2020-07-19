@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 from datetime import datetime
+import stat
 import re
 import traceback
 import zipfile
@@ -204,13 +205,20 @@ def main():
         waccess=ciop.getparam('waccess')
         if waccess=="yes":
             try:
-                ciop.log('INFO', 'Giving write access recursively to processing folder ' + processfolder)
+                ciop.log('INFO', 'Giving write permissions recursively to processing folder ' + processfolder)
                 os.chmod(processfolder,stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
                 for dirpath, dirnames, filenames in os.walk(processfolder):
                     for dname in dirnames:
-                        os.chmod(os.path.join(dirpath, dname),stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+                        try:
+                            os.chmod(os.path.join(dirpath, dname),stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+                        except:
+                            traceback.print_exc()
                     for fname in filenames:
-                        os.chmod(os.path.join(dirpath, fname),stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+                        try:
+                            os.chmod(os.path.join(dirpath, fname),stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH | stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
+                        except:
+                            traceback.print_exc()
+
             except:
                 traceback.print_exc()
                 clean_exit(ERR_ACCESS)
