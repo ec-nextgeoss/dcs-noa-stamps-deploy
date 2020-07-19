@@ -25,6 +25,7 @@ ERR_ZIP = 4
 ERR_KML = 5
 ERR_JPG = 6
 ERR_HARVEST = 7
+ERR_ACCESS = 8
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -38,7 +39,8 @@ def clean_exit(exit_code):
             ERR_ZIP: 'Failed to zip and publish INSAR folder or plot files',
             ERR_KML: 'Failed to create kml',
             ERR_JPG: 'Failed to create jpg',
-            ERR_HARVEST: 'Publish to harvest service failed'
+            ERR_HARVEST: 'Publish to harvest service failed',
+            ERR_ACCESS: 'Failed changing perissions to process folder'
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -198,6 +200,21 @@ def main():
             except:
                 traceback.print_exc()
                 clean_exit(ERR_CLEANUP)
+
+        waccess=ciop.getparam('waccess')
+        if waccess=="yes":
+            try:
+                ciop.log('INFO', 'Giving write access recursively to processing folder ' + processfolder)
+                os.chmod(processfolder,stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+                for dirpath, dirnames, filenames in os.walk(processfolder):
+                    for dname in dirnames:
+                        os.chmod(os.path.join(dirpath, dname),stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+                    for fname in filenames:
+                        os.chmod(os.path.join(dirpath, fname),stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_ACCESS)
+
 
         break
     
