@@ -176,12 +176,14 @@ def main():
         harvest=ciop.getparam('harvest')
         if harvest=="yes":
             try:
-                harvestdir = ckanxml.updatexml('/shared/sant_test1/PS_platform/INSAR_20171108',os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'pub_clean'),processfolder)
+                ciop.log('INFO', 'Creating CKAN xml')
+                harvestdir = ckanxml.updatexml(processfolder, os.path.join(os.environ['_CIOP_APPLICATION_PATH'], 'pub_clean'),processfolder)
                 files = [
                     {'name':'gevelo.kml', 'content_type':'text/xml'},
                     {'name':'plotvdo.jpg', 'content_type':'image/jpeg'},
                     {'name':'ckaninfo.xml', 'content_type':'text/xml'}
                 ]
+                ciop.log('INFO', 'Sending files for harvesting')
                 storeterradue.sendfiles(files, processfolder, harvestdir)
             except:
                 traceback.print_exc()
