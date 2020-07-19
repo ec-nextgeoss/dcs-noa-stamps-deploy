@@ -5,8 +5,6 @@
 # the specified command.
 #
 
-APPSHOME="$_CIOP_APPLICATION_PATH/utils"
-source $APPSHOME/StaMPS_CONFIG_sandbox.bash
 
 exe_name=$0
 exe_dir=`dirname "$0"`
@@ -17,6 +15,10 @@ if [ "x$1" = "x" ]; then
   echo    $0 \<deployedMCRroot\> args
 else
   echo Setting up environment variables
+  APPSHOME="$_CIOP_APPLICATION_PATH/utils"
+  source $APPSHOME/StaMPS_CONFIG_sandbox.bash
+  echo PATH: $PATH
+
   #MCRROOT="$1"
   MCRROOT=$MCR
   echo ---
