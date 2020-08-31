@@ -10,7 +10,8 @@ import hashlib
 
 def getAPIrepo():
     APIkey = 'AKCp5fU4YVRZ4UHZ39dectSqxk5wrnGMB5aVrAz4MR3EMG9nExkPt6zSGBqtehuYZNmUTiXqN'
-    repo ='aapostolakis'
+    #repo ='aapostolakis'
+    repo='nextgeoss-noa-stamps'
     uname ='aapostolakis'
     store = 'https://store.terradue.com'
     return APIkey, repo, uname, store

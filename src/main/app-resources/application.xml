@@ -41,7 +41,7 @@
          <parameter id="kmlpoints" title="KML point density" abstract="Select higher number for lower density" scope="runtime" maxOccurs="1" type="LiteralData">100</parameter>
          <parameter id="pub" title="Publish Processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="pub2" title="Publish plot files only" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
-         <parameter id="harvest" title="Publish to harvest service" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="harvest" title="Publish to harvest service" abstract="Values: yes no delete" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="cleanup" title="Clean up processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="waccess" title="Apply recursively write permissions to all for processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
       </defaultParameters>

@@ -176,21 +176,30 @@ def main():
                 traceback.print_exc()
                 clean_exit(ERR_ZIP)
 
-        harvest=ciop.getparam('harvest')
-        if harvest=="yes":
-            try:
-                ciop.log('INFO', 'Creating CKAN xml')
-                harvestdir = ckanxml.updatexml(processfolder, os.path.join(os.environ['_CIOP_APPLICATION_PATH'], 'pub_clean'),processfolder)
-                files = [
+        harvestfiles = [
                     {'name':'gevelo.kml', 'content_type':'text/xml'},
                     {'name':'plotvdo.jpg', 'content_type':'image/jpeg'},
                     {'name':'ckaninfo.xml', 'content_type':'text/xml'}
                 ]
+        harvest=ciop.getparam('harvest')
+        if harvest!='no':
+            ciop.log('INFO', 'Creating CKAN xml')
+            harvestdir = ckanxml.updatexml(processfolder, os.path.join(os.environ['_CIOP_APPLICATION_PATH'], 'pub_clean'),processfolder)
+        if harvest=="yes":
+            try:
                 ciop.log('INFO', 'Sending files for harvesting')
-                storeterradue.sendfiles(files, processfolder, harvestdir)
+                storeterradue.sendfiles(harvestfiles, processfolder, harvestdir)
             except:
                 traceback.print_exc()
                 clean_exit(ERR_HARVEST)
+        elif harvest=="delete":
+            try:
+                ciop.log('INFO', 'Deleting CKAN xml and files from harvest destination')
+                storeterradue.deletefiles(harvestfiles, harvestdir)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_HARVEST)
+
 
   
         del_proc=ciop.getparam('cleanup')
