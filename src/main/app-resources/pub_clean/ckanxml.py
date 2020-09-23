@@ -46,14 +46,24 @@ def set_tag(xml_template, nst, tag, value):
     tagel = xml_template.find(".//%s"%tag,nst)
     tagel.text = value
     
+def append_tag(xml_batch, nsd, xml_template, nst, tag):
+    sourcetag = xml_batch.find(".//%s"%tag,nsd)
+    targettag, targetparent = get_tag_and_parent(xml_template, nst, tag)
+    apptext = sourcetag.text if sourcetag.text is not None else ""
+    sourcetag.text = targettag.text + apptext
+    source_elem_st = ET.tostring(sourcetag)
+    new_target_elem = ET.fromstring(source_elem_st)
+    targetparent.remove(targettag)
+    targetparent.append(new_target_elem)
+    
 def get_tag_value(xmlelem, ns, tag):
     tagel = xmlelem.find(".//%s"%tag,ns)
     return tagel.text
 
 def get_tag_and_parent(xml_template, nst, tag):
-    dinfo_parent = xml_template.find(".//%s/.."%tag, nst)
-    distribinfo = xml_template.find(".//%s"%tag, nst)
-    return distribinfo, dinfo_parent
+    elem_parent = xml_template.find(".//%s/.."%tag, nst)
+    elem = xml_template.find(".//%s"%tag, nst)
+    return elem, elem_parent
 
 def append_element(elem, elem_parent):
     elem_st = ET.tostring(elem)
@@ -117,12 +127,12 @@ def updatexml(inputfolder, templatefolder, outputfolder):
     
     set_datetime(xml_template, nst)
     set_date(xml_template, nst)
-    copy_tag(xml_batch, nsd, xml_template, nst, "gmd:descriptiveKeywords")
+    #copy_tag(xml_batch, nsd, xml_template, nst, "gmd:descriptiveKeywords")
     copy_tag(xml_batch, nsd, xml_template, nst, "gmd:geographicElement")
     copy_tag(xml_batch, nsd, xml_template, nst, "gmd:temporalElement")
     copy_tag(xml_batch, nsd, xml_template, nst, "gmd:supplementalInformation")
-    #copy_tag(xml_batch, nsd, xml_template, nst, "gmd:distributionInfo")
     copy_tag(xml_batch, nsd, xml_template, nst, "gmd:citation/gmd:CI_Citation/gmd:title")
+    append_tag(xml_batch, nsd, xml_template, nst, "gmd:abstract/gco:CharacterString")
 
     APIkey, repo, uname, store = storeterradue.getAPIrepo()
     harvestdir = get_harvestname(xml_batch, nsd)
@@ -146,5 +156,8 @@ def updatexml(inputfolder, templatefolder, outputfolder):
     xmlst = '<?xml version="1.0" encoding="UTF-8"?>\n' + ET.tostring(xml_template)
     with open(os.path.join(outputfolder,outputfile), "w") as xmlf:
         xmlf.write(xmlst)
-
+        
     return harvestdir
+
+#folder=r'C:\Users\alex\Documents\Projects\NOA 1 interferogram\STAMPS\sandbox'
+#updatexml(folder, folder, folder)
