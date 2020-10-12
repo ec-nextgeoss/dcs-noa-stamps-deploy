@@ -6,10 +6,13 @@ import os
 import shutil
 import subprocess
 from datetime import datetime
+from stat import *
 import re
 import traceback
 import zipfile
 import zlib
+import ckanxml
+import storeterradue
 
 # import the ciop functions (e.g. copy, log)
 import cioppy
@@ -21,6 +24,9 @@ ERR_CLEANUP = 2
 ERR_TIME = 3
 ERR_ZIP = 4
 ERR_KML = 5
+ERR_JPG = 6
+ERR_HARVEST = 7
+ERR_ACCESS = 8
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -31,7 +37,11 @@ def clean_exit(exit_code):
     msg = { SUCCESS: 'Processing successfully concluded',
             ERR_CLEANUP: 'Failed cleaning master folder',
             ERR_TIME: 'Calculation of process duration failed. File STAMPS.log may not exist or it is incomplete',
-            ERR_ZIP: 'Failed to zip and publish INSAR folder or plot files'
+            ERR_ZIP: 'Failed to zip and publish INSAR folder or plot files',
+            ERR_KML: 'Failed to create kml',
+            ERR_JPG: 'Failed to create jpg',
+            ERR_HARVEST: 'Publish to harvest service failed',
+            ERR_ACCESS: 'Failed changing perissions to process folder'
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -104,6 +114,21 @@ def main():
             except:
                 traceback.print_exc()
                 clean_exit(ERR_KML)
+            # create jpg
+            try:
+                home = os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'utils')
+                runjpg = os.path.join(home,'StaMPS_4.1b/run_matlab.sh')
+                os.chdir(processfolder)
+                ciop.log('INFO', 'Create jpg')
+                cmdlist = [ runjpg, 'plotvdo.exe']
+                ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
+                res=subprocess.call(cmdlist)
+                if res!=0:
+                    clean_exit(ERR_KML)
+                assert(res == 0)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_KML)
 
 
         pub=ciop.getparam('pub')
@@ -132,7 +157,8 @@ def main():
                 zipfolder=os.path.join(os.path.dirname(processfolder),'plotfiles.zip')
                 zipf = zipfile.ZipFile(zipfolder, mode='w', allowZip64 = True)
                 plot_files_list=['mean_v.mat', 'parms.mat', 'ph2.mat', 'phuw2.mat', 'ps2.mat', 'ps_plot_v-dso.mat',\
-                                 'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml']
+                                 'psver.mat', 'rc2.mat', 'scla2.mat', 'scn2.mat', 'tca2.mat', 'parms_aps.mat', 'gevelo.kml','mv2.mat', \
+                                 'plotvdo.jpg', 'plotvdo.fig', 'ckaninfo.xml']
                 plot_files_created=[]
                 for f in plot_files_list:
                     fp=os.path.join(processfolder,f)
@@ -150,6 +176,31 @@ def main():
                 traceback.print_exc()
                 clean_exit(ERR_ZIP)
 
+        harvestfiles = [
+                    {'name':'gevelo.kml', 'content_type':'text/xml'},
+                    {'name':'plotvdo.jpg', 'content_type':'image/jpeg'},
+                    {'name':'ckaninfo.xml', 'content_type':'text/xml'}
+                ]
+        harvest=ciop.getparam('harvest')
+        if harvest!='no':
+            ciop.log('INFO', 'Creating CKAN xml')
+            harvestdir = ckanxml.updatexml(processfolder, os.path.join(os.environ['_CIOP_APPLICATION_PATH'], 'pub_clean'),processfolder)
+        if harvest=="yes":
+            try:
+                ciop.log('INFO', 'Sending files for harvesting')
+                storeterradue.sendfiles(harvestfiles, processfolder, harvestdir)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_HARVEST)
+        elif harvest=="delete":
+            try:
+                ciop.log('INFO', 'Deleting CKAN xml and files from harvest destination')
+                storeterradue.deletefiles(harvestfiles, harvestdir)
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_HARVEST)
+
+
   
         del_proc=ciop.getparam('cleanup')
         if os.path.exists(processfolder) and del_proc=="yes":
@@ -159,7 +210,28 @@ def main():
             except:
                 traceback.print_exc()
                 clean_exit(ERR_CLEANUP)
-                
+
+        waccess=ciop.getparam('waccess')
+        if waccess=="yes":
+            try:
+                ciop.log('INFO', 'Giving write permissions recursively to processing folder ' + processfolder)
+                os.chmod(processfolder,os.stat(processfolder)[ST_MODE] | S_IRWXG | S_IRWXO)
+                for dirpath, dirnames, filenames in os.walk(processfolder):
+                    for dname in dirnames:
+                        try:
+                            os.chmod(os.path.join(dirpath, dname),os.stat(os.path.join(dirpath, dname))[ST_MODE] | S_IRWXG | S_IRWXO)
+                        except:
+                            traceback.print_exc()
+                    for fname in filenames:
+                        try:
+                            os.chmod(os.path.join(dirpath, fname), os.stat(os.path.join(dirpath, fname))[ST_MODE] | S_IWGRP | S_IWOTH | S_IRUSR | S_IRGRP | S_IROTH)
+                        except:
+                            traceback.print_exc()
+            except:
+                traceback.print_exc()
+                clean_exit(ERR_ACCESS)
+
+
         break
     
 try:

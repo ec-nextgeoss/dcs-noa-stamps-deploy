@@ -17,6 +17,8 @@ SUCCESS = 0
 ERR_STEP_5b = 2
 ERR_STEP_6 = 3
 ERR_STEP_7 = 4
+ERR_STEP_8 = 5
+
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -28,6 +30,7 @@ def clean_exit(exit_code):
            ERR_STEP_5b: 'Error in STAMPS step 5b',
            ERR_STEP_6: 'Error in STAMPS step 6',
            ERR_STEP_7: 'Error in STAMPS step 7',
+           ERR_STEP_8: 'Error in STAMPS step 8',
            }
  
     ciop.log(log_level, msg[exit_code])  
@@ -35,7 +38,7 @@ def clean_exit(exit_code):
 def main():
  
     home=os.path.join(os.environ['_CIOP_APPLICATION_PATH'],'utils')
-    runstamps = os.path.join(home,'StaMPS_4.1b/rt_stamps_2/run_stamps_env.sh')
+    runmatlab = os.path.join(home,'StaMPS_4.1b/run_matlab.sh')
 
     # Loops over all the inputs
 
@@ -58,12 +61,12 @@ def main():
         
             patch_flag='y' if i==5 else 'n'
             stamps_PART_limitation='2' if i==5 else '0'
-            cmdlist = [ runstamps, '%d'%i, '%d'%i, patch_flag, '0', '[]', stamps_PART_limitation]
+            cmdlist = [ runmatlab, 'stamps.exe', '%d'%i, '%d'%i, patch_flag, '0', '[]', stamps_PART_limitation]
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
             if run_proc=="yes":
                 res=subprocess.call(cmdlist)
                 if res!=0:
-                    clean_exit(1+i)
+                    clean_exit(i-3)
                 assert(res == 0)
                 
         #output_path = os.path.join(ciop.tmp_dir, 'output')

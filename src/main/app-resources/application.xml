@@ -4,8 +4,8 @@
   	 <jobTemplate id="masterfolder_prep">
       <streamingExecutable>/application/masterfolder_prep/master_prep.py</streamingExecutable>
       <defaultParameters>
-          <parameter id="masterfolder" title="Input (INSAR) folder" abstract="Path to Input directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/sant_test1/PS_platform/INSAR_20171108</parameter>
-          <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">/shared/sant_stamps_run1</parameter>
+          <parameter id="masterfolder" title="Input (INSAR) folder" abstract="Path to Input directory" scope="runtime" maxOccurs="1" type="LiteralData">empty</parameter>
+          <parameter id="outputdir" title="Processing folder" abstract="Path to Processing directory" scope="runtime" maxOccurs="1" type="LiteralData">empty</parameter>
           <parameter id="setparams" title="Stamps Parameters" abstract="param1=value1#param2=value2..." scope="runtime" maxOccurs="1" type="LiteralData">empty</parameter>
        </defaultParameters>
        <defaultJobconf>
@@ -26,8 +26,8 @@
     <jobTemplate id="stamps_v4_aggr">
       <streamingExecutable>/application/stamps_v4_aggr/stamps_5b67.py</streamingExecutable>
       <defaultParameters>
-         <parameter id="realrun57" title="Run Steps 5-7" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
-         <parameter id="runsteps57" title="Run Steps Range (5-7)" abstract="Values: x-y (min x = 5, max y = 7), 5 is for step 5b" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
+         <parameter id="realrun57" title="Run Steps 5-8" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="runsteps57" title="Run Steps Range (5-8)" abstract="Values: x-y (min x = 5, max y = 8), 5 is for step 5b" scope="runtime" maxOccurs="1" type="LiteralData">5-7</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>
@@ -41,7 +41,9 @@
          <parameter id="kmlpoints" title="KML point density" abstract="Select higher number for lower density" scope="runtime" maxOccurs="1" type="LiteralData">100</parameter>
          <parameter id="pub" title="Publish Processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="pub2" title="Publish plot files only" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="harvest" title="Publish to harvest service" abstract="Values: yes no delete" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
          <parameter id="cleanup" title="Clean up processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
+         <parameter id="waccess" title="Apply recursively write permissions to all for processing folder" abstract="Values: yes no" scope="runtime" maxOccurs="1" type="LiteralData">no</parameter>
       </defaultParameters>
       <defaultJobconf>
         <property id="ciop.job.max.tasks">1</property>

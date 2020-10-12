@@ -6,9 +6,9 @@ export SAR_ODR_DIR="/home/celene/auxillary/orbits/ODR/"
 #export VOR_DIR="/home/celene/auxillary/orbits/ENVISAT_DOR/VOR/"
 #export INS_DIR="/home/celene/auxillary/INS/"
 #export DORIS_BIN="/usr/local/bin"
-#export TRIANGLE_BIN="/usr/local/bin"
 export SNAPHU_BIN="$_CIOP_APPLICATION_PATH/utils/snaphu/bin"
 export ISCECONTRIB="$_CIOP_APPLICATION_PATH/utils/ISCEcontrib/bin"
+export TRIANGLE_BIN="$_CIOP_APPLICATION_PATH/utils/triangle/bin"
 
 export ROI_PAC="$SAR/ROI_PAC"
 #####################################
@@ -65,4 +65,4 @@ export SAR_TAPE="/dev/rmt/0mn"
 export MCR="/opt/v85"
 #export PATH=${PATH}:$STAMPS/bin:$MY_SCR:$INT_BIN:$INT_SCR:$OUR_SCR:$DORIS_SCR:$GETORB_BIN:$DORIS_BIN:$TRIANGLE_BIN:$SNAPHU_BIN
 #export PATH=${PATH}:$STAMPS/bin:$SNAPHU_BIN:$ISCECONTRIB
-export PATH="${PATH}:$STAMPS/bin:$SNAPHU_BIN:$ISCECONTRIB"
+export PATH="${PATH}:$STAMPS/bin:$SNAPHU_BIN:$ISCECONTRIB:$TRIANGLE_BIN"
