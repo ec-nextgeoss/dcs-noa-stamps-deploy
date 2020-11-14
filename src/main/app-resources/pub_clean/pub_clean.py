@@ -214,9 +214,10 @@ def main():
         waccess=ciop.getparam('waccess')
         if waccess=="yes":
             try:
-                ciop.log('INFO', 'Giving write permissions recursively to processing folder ' + processfolder)
-                os.chmod(processfolder,os.stat(processfolder)[ST_MODE] | S_IRWXG | S_IRWXO)
-                for dirpath, dirnames, filenames in os.walk(processfolder):
+                processdir = os.path.dirname(processfolder)
+                ciop.log('INFO', 'Giving write permissions recursively to processing folder ' + processdir)
+                #os.chmod(processfolder,os.stat(processfolder)[ST_MODE] | S_IRWXG | S_IRWXO)
+                for dirpath, dirnames, filenames in os.walk(processdir):
                     for dname in dirnames:
                         try:
                             os.chmod(os.path.join(dirpath, dname),os.stat(os.path.join(dirpath, dname))[ST_MODE] | S_IRWXG | S_IRWXO)
