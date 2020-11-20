@@ -19,6 +19,7 @@ SUCCESS = 0
 ERR_COPY = 1
 ERR_STAMPS_HEADER = 2
 ERR_SETPARM = 3
+ERR_INSAR = 4
 
 # add a trap to exit gracefully
 def clean_exit(exit_code):
@@ -29,11 +30,27 @@ def clean_exit(exit_code):
     msg = { SUCCESS: 'Processing successfully concluded',
            ERR_COPY: 'Error in copy to process folder',
            ERR_STAMPS_HEADER: 'Error in stamps_mc_header',
-           ERR_SETPARM: 'Error in parameter setting'
+           ERR_SETPARM: 'Error in parameter setting',
+           ERR_INSAR: 'INSAR folder is missing'
            }
  
     ciop.log(log_level, msg[exit_code])  
-    
+
+def untartoprocessdir(master, process):
+    if master[-6:]=='tar.gz' or master[-3:]=='tar':
+        params = 'xf' if master[-3:]=='tar' else 'xfz'
+        cmdlist = ['tar', params , master, '-C', process]
+        res=subprocess.call(cmdlist)
+        return res
+    return -100
+
+def INSARdir(processdir):
+    insardir = [d for d in os.listdir(processdir) if re.match(r'^INSAR_', d)]
+    if len(insardir)>=1:
+        return os.path.join(processdir,insardir[0])
+    else:
+        return None
+
 def main():
     # Loops over all the inputs
 
@@ -48,22 +65,42 @@ def main():
     
         ciop.log('INFO', 'Master folder is: ' + masterfolder)
            
-        processfolder = os.path.join(PROCESSDIR,os.path.basename(masterfolder))
-        ciop.log('INFO', 'Master temp folder: ' + processfolder)
-        ciop.log('INFO', 'path exists  ' + processfolder + ' : ' + '%s'%os.path.exists(processfolder))
+        ciop.log('INFO', 'Process folder is: ' + PROCESSDIR)
         ciop.log('INFO', 'path exists  ' + PROCESSDIR + ' : ' + '%s'%os.path.exists(PROCESSDIR))
         
         if not os.path.exists(PROCESSDIR):
             os.makedirs(PROCESSDIR)
             os.chmod(PROCESSDIR,stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
-            
-        if not os.path.exists(processfolder):
-            ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
-            retrieved = ciop.copy(masterfolder, PROCESSDIR)
-            if not retrieved:
-                clean_exit(1)
-            assert(retrieved)
-            ciop.log('INFO', 'Finished : ' + os.path.basename(retrieved))
+
+
+        insarfolder = INSARdir(PROCESSDIR)    
+        if not insarfolder:
+            if masterfolder[-6:]=='tar.gz' or masterfolder[-3:]=='tar':
+                ciop.log('INFO', 'Extract  ' + masterfolder + ' to ' + PROCESSDIR)
+                res = untartoprocessdir(masterfolder, PROCESSDIR)
+                if res!=0:
+                    clean_exit(ERR_COPY)
+                assert(res == 0)
+            else:
+                ciop.log('INFO', 'Copy  ' + masterfolder + ' to ' + PROCESSDIR)
+                if os.path.isdir(masterfolder):
+                    ret = ciop.copy(masterfolder, PROCESSDIR)
+                    res = 0
+                    if not ret:
+                        res = ERR_COPY
+                        clean_exit(ERR_COPY)
+                    assert(res == 0)
+                elif os.path.isfile(masterfolder):
+                    shutil.copyfile(masterfolder, os.path.join(PROCESSDIR, os.path.basename(masterfolder)))
+            res = 0
+            insarfolder = INSARdir(PROCESSDIR)
+            if not insarfolder:
+                res = ERR_INSAR
+                clean_exit(ERR_INSAR)
+            assert(res == 0)
+                  
+            ciop.log('INFO', 'Finished creatring ' + insarfolder)
+
             #Possible alternative: Use of copytree
             #try:
             #    shutil.copytree(masterfolder, PROCESSDIR)
@@ -71,8 +108,8 @@ def main():
             #    clean_exit(1)
 
         #change working directory
-        os.chdir(processfolder)
-        ciop.log('INFO', 'Change working directory to  :' + processfolder)
+        os.chdir(insarfolder)
+        ciop.log('INFO', 'Change working directory to  :' + insarfolder)
 
         #set parameters to stamps
         ciop.log('INFO', 'Setting Parameters')
@@ -97,7 +134,7 @@ def main():
         assert(res == 0)
 
         #run stamps header            
-        #if not os.path.isfile(os.path.join(processfolder,'patch_list_split_1')):
+        #if not os.path.isfile(os.path.join(insarfolder,'patch_list_split_1')):
         cmdlist = [ runstampsheader, '1', '1', 'y', '0']
         ciop.log('INFO', 'Run Command :' + ' '.join(cmdlist))
         res=subprocess.call(cmdlist)
@@ -108,7 +145,7 @@ def main():
  
         # publish the result 
         # ciop.publish publish the patches names to create same number of susequent node instances
-        os.chdir(processfolder)
+        os.chdir(insarfolder)
 
         #define and publish patch list
         ciop.log('INFO', 'Publishing patches')
@@ -128,7 +165,7 @@ def main():
         
         for patch in patches:
             #line=line.rstrip('\n').rstrip('\r')
-            published = ciop.publish(os.path.join(processfolder,patch), mode = "silent")
+            published = ciop.publish(os.path.join(insarfolder,patch), mode = "silent")
             ciop.log('INFO', 'Published ' + published)
     
 try:

@@ -34,7 +34,17 @@ def clean_exit(exit_code):
            ERR_STEP_5: 'Error in STAMPS step 5'
            }
  
-    ciop.log(log_level, msg[exit_code])  
+    ciop.log(log_level, msg[exit_code])
+    
+def find_patchlist(patchlist_folder, patch_no):
+    patchlistfiles = [f for f in os.listdir(patchlist_folder) if re.match(r'^patch_list_split', f)]
+    for fname in patchlistfiles:
+        with open(os.path.join(patchlist_folder,fname),"r") as pl:
+            patch = pl.readline().rstrip()
+            pl_patch_no = re.search("[^_]*$", patch).group(0)
+            if patch_no == pl_patch_no:
+                return fname
+    return None
     
 def main():
     # Loops over all the inputs
@@ -48,8 +58,9 @@ def main():
         ciop.log('INFO', 'The input file is: ' + inputfile)
 
         #patch_no = inputfile[-1:]
-        match=re.search(r"PATCH_.*",inputfile)
-        patch_no = match.group(0)[6]
+        match = re.search(r"PATCH_.*",inputfile)
+        match2 = re.search("[^_]*$", match.group(0))
+        patch_no = match2.group(0).rstrip()
         
         masterfolder=os.path.dirname(inputfile)
         ciop.log('INFO', 'Master folder is: ' + masterfolder)
@@ -67,8 +78,10 @@ def main():
         for i in range(startstep,endstep+1):
             ciop.log('INFO', 'Processing PATCH ' + patch_no)
             ciop.log('INFO', 'Running Step %d for PATCH %s'%(i,patch_no))
+            
+            patch_list_name = find_patchlist(processfolder, patch_no)
         
-            cmdlist = [ runstamps, '%d'%i, '%d'%i, 'y', '0', 'patch_list_split_'+patch_no, '1']
+            cmdlist = [ runstamps, '%d'%i, '%d'%i, 'y', '0', patch_list_name, '1']
             ciop.log('INFO', 'Command :' + ' '.join(cmdlist))
             if run_proc=="yes":
                 res=subprocess.call(cmdlist)

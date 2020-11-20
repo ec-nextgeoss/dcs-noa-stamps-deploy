@@ -140,7 +140,11 @@
 					<gco:CharacterString>WGS 84 / World Mercator</gco:CharacterString>
 				</gmd:title>
 			    <gmd:linkage>
-				<gmd:URL>http://www.epsg-registry.org/indicio/query?request=GetRepositoryItem&amp;id=urn:ogc:def:crs:EPSG::4326</gmd:URL>
+				<gmd:URL>https://spatialreference.org/ref/epsg/4326/</gmd:URL>
+				</gmd:linkage>
+				<gmd:title><gco:CharacterString>WGS 84 / World Mercator</gco:CharacterString></gmd:title>
+				<gmd:linkage>
+				<gmd:URL>http://epsg.io/4326</gmd:URL>
 				</gmd:linkage>
             </gmd:RS_Identifier>
          </gmd:referenceSystemIdentifier>
